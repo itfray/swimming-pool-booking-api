@@ -1,0 +1,27 @@
+# Normalize EOL for text files
+* text=auto
+
+# Normalized files
+.gitignore      text
+.gitattributes  text
+*.md            text diff=markdown
+
+# Linux scripts should use lf
+*.bash      text eol=lf
+*.fish      text eol=lf
+*.sh        text eol=lf
+*.zsh       text eol=lf
+/mvnw       text eol=lf
+
+# Windows scripts should use crlf
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
+*.ps1       text eol=crlf
+
+# Exclude files
+.gitattributes    export-ignore
+.gitignore        export-ignore
+.gitkeep          export-ignore
+
+
+
