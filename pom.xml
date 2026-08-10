@@ -49,6 +49,12 @@
       <scope>runtime</scope>
     </dependency>
 
+    <!-- Liquibase -->
+    <dependency>
+      <groupId>org.liquibase</groupId>
+      <artifactId>liquibase-core</artifactId>
+    </dependency>
+
     <!-- Spring Boot Test -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
