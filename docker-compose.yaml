@@ -1,0 +1,28 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: pool-booking-postgres
+    environment:
+      POSTGRES_DB: plbk
+      POSTGRES_USER: plbk
+      POSTGRES_PASSWORD: plbk
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8"
+    ports:
+      - "15432:5432"
+    volumes:
+      - poolbooking_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U plbk"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - poolbooking-network
+
+volumes:
+  poolbooking_db:
+    driver: local
+
+networks:
+  poolbooking-network:
+    driver: bridge
