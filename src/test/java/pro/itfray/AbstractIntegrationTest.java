@@ -13,7 +13,7 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class AbstractIntegrationTest {
 
-  static final PostgreSQLContainer POSTGRES = new PostgreSQLContainer("postgres:15")
+  static final PostgreSQLContainer POSTGRES = new PostgreSQLContainer("postgres:15-alpine")
       .withInitScript("db/init.sql")
       .withDatabaseName("testdb")
       .withUrlParam("currentSchema", "test")
