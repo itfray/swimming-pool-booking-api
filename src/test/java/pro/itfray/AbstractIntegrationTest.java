@@ -14,7 +14,9 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
 public abstract class AbstractIntegrationTest {
 
   static final PostgreSQLContainer POSTGRES = new PostgreSQLContainer("postgres:15")
+      .withInitScript("db/init.sql")
       .withDatabaseName("testdb")
+      .withUrlParam("currentSchema", "test")
       .withUsername("testuser")
       .withPassword("testpass");
 

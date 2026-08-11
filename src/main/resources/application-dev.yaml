@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:15432/plbk
+    url: jdbc:postgresql://localhost:15432/plbk?currentSchema=plbk
     username: plbk
     password: plbk
     driver-class-name: org.postgresql.Driver
