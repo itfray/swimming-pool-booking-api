@@ -9,17 +9,24 @@ find suitable organizations, and book available spots online.
 
 ### Backend
 
-- Java 21 is used as the programming language
-- Spring Boot 4 is used for the API
-- Data is stored in Postgres, with JPA (Hibernate) as the ORM
-  - There are separate database for dev, staging and prod
-  - For end to end testing, a new database is created and populated,
-    then removed after tests are complete
+- **Java 21** is used as the programming language
+- **Spring Boot 4** is used for the API with the following starters:
+  - `spring-boot-starter-web` for REST API
+  - `spring-boot-starter-data-jpa` for database access (JPA/Hibernate ORM)
+  - `spring-boot-starter-validation` for input validation
+  - `spring-boot-starter-liquibase` for database schema versioning and migrations
+- **PostgreSQL** is the database, managed by Liquibase for migrations
+  - Separate databases for dev, staging, and prod environments
+  - For end-to-end testing, a new database is created via Testcontainers,
+    populated during tests, then removed automatically after tests complete
 
 ### Testing
 
-- JUnit 5 for Java
-- Spring Boot Test for e2e tests
+- **JUnit 5** for Java unit tests
+- **Spring Boot Test** for integration and e2e tests
+- **Testcontainers** with PostgreSQL module for isolated database testing
+  - PostgreSQL container is provisioned and managed automatically for tests
+  - No manual database setup required for test execution
 
 ## Project and code guidelines
 
