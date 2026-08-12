@@ -20,8 +20,25 @@ services:
     networks:
       - poolbooking-network
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.7
+    container_name: pool-booking-keycloak
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    ports:
+      - "8081:8080"
+    volumes:
+      - poolbooking_keycloak:/opt/keycloak/data
+      - ./keycloak:/opt/keycloak/data/import
+    command: ["start-dev", "--import-realm"]
+    networks:
+      - poolbooking-network
+
 volumes:
   poolbooking_db:
+    driver: local
+  poolbooking_keycloak:
     driver: local
 
 networks:
