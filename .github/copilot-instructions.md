@@ -12,17 +12,28 @@ find suitable organizations, and book available spots online.
 - **Java 21** is used as the programming language
 - **Spring Boot 4** is used for the API with the following starters:
   - `spring-boot-starter-web` for REST API
+  - `spring-boot-starter-actuator` for health checks and monitoring
   - `spring-boot-starter-data-jpa` for database access (JPA/Hibernate ORM)
   - `spring-boot-starter-validation` for input validation
+  - `spring-boot-starter-security` for authentication and authorization
+  - `spring-boot-starter-oauth2-resource-server` for OAuth2 resource server configuration
   - `spring-boot-starter-liquibase` for database schema versioning and migrations
+  - `spring-boot-devtools` for development experience improvements
 - **PostgreSQL** is the database, managed by Liquibase for migrations
   - Separate databases for dev, staging, and prod environments
   - For end-to-end testing, a new database is created via Testcontainers,
     populated during tests, then removed automatically after tests complete
+- **Keycloak 26.7** is used for identity and access management (IAM)
+  - Deployed via Docker Compose alongside PostgreSQL
+  - Provides OAuth2/OIDC authentication and authorization
+- **Docker Compose** for local development environment orchestration
+  - PostgreSQL 15-alpine container
+  - Keycloak container with realm import configuration
 
 ### Testing
 
 - **JUnit 5** for Java unit tests
+- **AssertJ** for fluent assertion statements
 - **Spring Boot Test** for integration and e2e tests
 - **Testcontainers** with PostgreSQL module for isolated database testing
   - PostgreSQL container is provisioned and managed automatically for tests
