@@ -1,39 +1,85 @@
-## Integration Testing with AbstractIntegrationTest
+## Integration testing — test base classes
 
-The project includes `AbstractIntegrationTest` for writing integration tests with automatic database setup:
+This project provides a small hierarchy of test base classes used by different kinds of integration tests. They centralize Testcontainers setup, Spring property wiring, and reusable helpers.
 
-### Using AbstractIntegrationTest
+### Test base classes
 
+- AbstractContainerizedTest
+  - Starts shared Testcontainers used by tests (PostgreSQL and Keycloak) using a singleton pattern.
+  - The Keycloak container imports the local realm configuration (keycloak/realm.json).
+  - Containers are started in a static block and are reused across test classes for performance.
+
+- AbstractSpringIntegrationTest
+  - Extends AbstractContainerizedTest.
+  - Uses @DynamicPropertySource to inject container connection details into Spring properties (datasource URL/username/password and Keycloak JWK URI).
+  - Activates the "test" profile in participating tests.
+
+- AbstractE2ETest
+  - Base for end-to-end (full application) tests annotated with @SpringBootTest(webEnvironment = RANDOM_PORT).
+  - Sets RestAssured.port to the random port and provides helper methods (e.g., getToken(username,password)) to obtain Keycloak tokens for test requests.
+
+- AbstractDataJpaIntegrationTest
+  - @DataJpaTest slice for JPA repository integration tests. Extends AbstractSpringIntegrationTest so Testcontainers properties are applied.
+  - Use this for repository-level tests that need a real database.
+
+- AbstractWebMvcTest
+  - @WebMvcTest slice for controller contract tests. Imports SecurityConfig so controller security configuration is available.
+  - Use this for fast controller tests (MockMvc / controller slice) and not full Spring context startup.
+
+### Where test properties live
+
+- src/test/resources/application-test.yaml contains default test properties (datasource pointing to localhost and a default JWKS URI). AbstractSpringIntegrationTest overrides these at runtime using container values via @DynamicPropertySource.
+
+### Examples
+
+Repository integration test (real DB):
 ```java
-class MyFeatureTest extends AbstractIntegrationTest {
-
+public class UserRepositoryIntegrationTest extends AbstractDataJpaIntegrationTest {
   @Autowired
   private UserRepository userRepository;
 
   @Test
-  void testUserCreation() {
-    User user = new User();
-    user.setEmail("test@example.com");
-
-    User saved = userRepository.save(user);
-
+  void shouldSaveUser() {
+    var u = new User();
+    u.setEmail("a@b.com");
+    var saved = userRepository.save(u);
     assertNotNull(saved.getId());
   }
 }
 ```
 
-### How It Works
+End-to-end test (running app + Keycloak):
+```java
+public class UserControllerE2ETest extends AbstractE2ETest {
+  @Test
+  void shouldReturnProfileWhenAuthenticated() {
+    String token = getToken("user","password");
+    RestAssured.given()
+        .header("Authorization", "Bearer " + token)
+        .when()
+        .get("/api/profile")
+        .then()
+        .statusCode(200);
+  }
+}
+```
 
-1. **Singleton Container Pattern** - One PostgreSQL Docker container is started per test run and reused across all tests for performance
-2. **Static Initialization** - The container starts before any tests run via static block
-3. **Dynamic Properties** - `@DynamicPropertySource` method injects container connection details into Spring configuration
-4. **Automatic Migrations** - Liquibase migrations execute automatically during Spring context startup
-5. **Clean State** - Each test sees a fresh database with all migrations applied
+Web MVC controller slice (fast, no containers required):
+```java
+public class UserControllerTest extends AbstractWebMvcTest {
+  @Autowired
+  private MockMvc mockMvc;
 
-### Key Points
+  @Test
+  void shouldReturnOk() throws Exception {
+    mockMvc.perform(get("/api/users"))
+        .andExpect(status().isOk());
+  }
+}
+```
 
-- Tests use actual database connections through TestContainers
-- All Liquibase migrations (base + test-specific) are applied before tests run
-- No mocking of database access - true integration tests
-- Slower than unit tests but provide realistic scenarios
-- Container is stopped after all tests complete
+### Key points and tradeoffs
+
+- Containerized tests (AbstractSpringIntegrationTest / AbstractE2ETest / AbstractDataJpaIntegrationTest) use real PostgreSQL and Keycloak instances — they are slower but provide realistic coverage and execute Liquibase migrations automatically.
+- WebMvc slice tests (AbstractWebMvcTest) are much faster and suitable for controller-level contract tests where full application startup is unnecessary.
+- Testcontainers are started once per JVM run (singleton) and are stopped when the JVM exits.

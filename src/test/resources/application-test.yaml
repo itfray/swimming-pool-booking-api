@@ -1,0 +1,25 @@
+spring:
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-test.xml
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:15432/testdb?currentSchema=test
+    username: testuser
+    password: testpass
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:18484/realms/test/protocol/openid-connect/certs}
+
+logging:
+  level:
+    root: INFO
+    pro.itfray: DEBUG
+    org.springframework.test.context.cache: INFO

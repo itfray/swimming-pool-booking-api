@@ -1,6 +1,6 @@
 {
   "id" : "d0d21520-fa40-4258-82c4-e2c02d72128b",
-  "realm" : "pool-booking",
+  "realm" : "test",
   "notBefore" : 0,
   "defaultSignatureAlgorithm" : "RS256",
   "revokeRefreshToken" : false,
@@ -65,7 +65,7 @@
       "attributes" : { }
     }, {
       "id" : "af12d118-5f7f-444c-9f06-bae83a6f2d3b",
-      "name" : "default-roles-pool-booking",
+      "name" : "default-roles-test",
       "description" : "${role_default-roles}",
       "composite" : true,
       "composites" : {
@@ -277,7 +277,7 @@
         "attributes" : { }
       } ],
       "security-admin-console" : [ ],
-      "pool-booking-api" : [ ],
+      "test-api" : [ ],
       "admin-cli" : [ ],
       "account-console" : [ ],
       "broker" : [ {
@@ -369,7 +369,7 @@
   "groups" : [ ],
   "defaultRole" : {
     "id" : "af12d118-5f7f-444c-9f06-bae83a6f2d3b",
-    "name" : "default-roles-pool-booking",
+    "name" : "default-roles-test",
     "description" : "${role_default-roles}",
     "composite" : true,
     "clientRole" : false,
@@ -429,7 +429,7 @@
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
-    "realmRoles" : [ "default-roles-pool-booking" ],
+    "realmRoles" : [ "default-roles-test" ],
     "notBefore" : 0,
     "groups" : [ ]
   } ],
@@ -448,12 +448,12 @@
     "clientId" : "account",
     "name" : "${client_account}",
     "rootUrl" : "${authBaseUrl}",
-    "baseUrl" : "/realms/pool-booking/account/",
+    "baseUrl" : "/realms/test/account/",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "redirectUris" : [ "/realms/pool-booking/account/*" ],
+    "redirectUris" : [ "/realms/test/account/*" ],
     "webOrigins" : [ ],
     "notBefore" : 0,
     "bearerOnly" : false,
@@ -479,12 +479,12 @@
     "clientId" : "account-console",
     "name" : "${client_account-console}",
     "rootUrl" : "${authBaseUrl}",
-    "baseUrl" : "/realms/pool-booking/account/",
+    "baseUrl" : "/realms/test/account/",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "redirectUris" : [ "/realms/pool-booking/account/*" ],
+    "redirectUris" : [ "/realms/test/account/*" ],
     "webOrigins" : [ ],
     "notBefore" : 0,
     "bearerOnly" : false,
@@ -573,7 +573,7 @@
     "optionalClientScopes" : [ "address", "phone", "organization", "offline_access", "microprofile-jwt" ]
   }, {
     "id" : "23733d04-5e36-4557-b113-06c082d3fcb2",
-    "clientId" : "pool-booking-api",
+    "clientId" : "test-api",
     "name" : "",
     "description" : "",
     "rootUrl" : "",
@@ -646,12 +646,12 @@
     "clientId" : "security-admin-console",
     "name" : "${client_security-admin-console}",
     "rootUrl" : "${authAdminUrl}",
-    "baseUrl" : "/admin/pool-booking/console/",
+    "baseUrl" : "/admin/test/console/",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "redirectUris" : [ "/admin/pool-booking/console/*" ],
+    "redirectUris" : [ "/admin/test/console/*" ],
     "webOrigins" : [ "+" ],
     "notBefore" : 0,
     "bearerOnly" : false,

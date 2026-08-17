@@ -1,6 +1,6 @@
 # User Registration in the Application
 
-# 1. Purpose of the Functionality
+## 1. Purpose of the Functionality
 
 The functionality is intended to create and retrieve a local application user profile after the user has successfully registered in Keycloak.
 
@@ -25,9 +25,9 @@ The local `user` table must not duplicate passwords, credentials, or other authe
 
 ---
 
-# 2. User Flow
+## 2. User Flow
 
-### Main Happy Path
+#### Main Happy Path
 
 ```text
 User
@@ -49,7 +49,7 @@ Frontend
     |
     | 5. Receives OAuth2/OIDC token
     |
-    | 6. POST /users request
+    | 6. POST /v1/users request
     v
 Backend
     |
@@ -64,11 +64,11 @@ Backend
     |
     +-----------------------------------+
     |
-    | 10. GET /users/{id}
+    | 10. GET /v1/users/{id}
     v
 Backend
     |
-    +---- Keycloak: identity data
+    +---- JWT: Keycloak identity data
     |
     +---- PostgreSQL: application data
     |
@@ -85,71 +85,28 @@ Search for recreation areas
 
 ---
 
-# 3. System Responsibility Boundaries
+## 3. System Responsibility Boundaries
 
-| Data                          | Source System                |
-| ----------------------------- | --------------------------- |
-| User UID                      | Keycloak                    |
-| Username                      | Keycloak                    |
-| Email                         | Keycloak                    |
-| First name                    | Keycloak                    |
-| Last name                     | Keycloak                    |
-| Theme                         | PostgreSQL                  |
-| Organization relationships   | PostgreSQL                  |
-| Authentication                | Keycloak                    |
-| Authorization                 | Keycloak + backend security |
-| Local application profile    | PostgreSQL                  |
+| Data                           | Source System                |
+|--------------------------------|------------------------------|
+| User UID                       | Keycloak                     |
+| Username                       | Keycloak                     |
+| Email                          | Keycloak                     |
+| First name                     | Keycloak                     |
+| Last name                      | Keycloak                     |
+| Theme                          | PostgreSQL                   |
+| Organization relationships     | PostgreSQL                   |
+| Authentication                 | Keycloak                     |
+| Authorization                  | Keycloak + backend security  |
+| Local application profile      | PostgreSQL                   |
 
 Thus, **Keycloak is the master source for identity attributes**, while PostgreSQL is the master source for application-specific attributes.
 
-This is important because the backend must not accept `uid`, `email`, `username`, or similar identity fields from the frontend in `POST /users`. They must be determined from the authenticated user context.
+This is important because the backend must not accept `uid`, `email`, `username`, or similar identity fields from the frontend in `POST /v1/users`. They must be determined from the authenticated user context.
 
 ---
 
-# 4. Architectural Model
-
-Diagram:
-
-```text
-                    ┌──────────────────┐
-                    │     Keycloak     │
-                    │                  │
-                    │ User             │
-                    │ - uid            │
-                    │ - username       │
-                    │ - email          │
-                    │ - firstName      │
-                    │ - lastName       │
-                    └────────┬─────────┘
-                             │
-                        OAuth2/OIDC
-                             │
-                             v
-┌──────────────┐       ┌───────────────┐
-│   Frontend   │──────>│    Backend    │
-└──────────────┘       │ Spring Boot   │
-                       │               │
-                       │ User API      │
-                       └───────┬───────┘
-                               │
-                               │ JPA
-                               v
-                       ┌───────────────----┐
-                       │  PostgreSQL       │
-                       │                   │
-                       │ user              │
-                       │ organization      │
-                       │ user_organization │
-                       └───────────────----┘
-```
-
-The backend acts as an intermediary layer between the frontend, Keycloak, and PostgreSQL.
-
-Spring Security and OAuth2 Resource Server are used for security.
-
----
-
-# 5 Authentication
+## 4 Authentication
 
 Endpoints must be secured.
 
@@ -169,11 +126,11 @@ The standard `sub` claim is used to store the UID, and this must be fixed in the
 
 ---
 
-# 6 Endpoint Description
+## 5 Endpoint Description
 
-## 6.1 POST `/users`
+### 5.1 POST `/v1/users`
 
-### 6.1.1 Purpose
+#### 5.1.1 Purpose
 
 The endpoint is intended for **creating a local application user after successful registration in Keycloak**.
 
@@ -181,17 +138,16 @@ The endpoint does not register the user in Keycloak.
 
 Account registration is performed by Keycloak.
 
-`POST /users` creates the local user profile in PostgreSQL.
-
+`POST /v1/users` creates the local user profile in PostgreSQL.
 
 ---
 
-### 6.1.2 Request Structure
+#### 5.1.2 Request Structure
 
 Identity attributes do not need to be passed in the request body.
 
 ```http
-POST /users
+POST /v1/users
 Authorization: Bearer <access_token>
 Content-Type: application/json
 ```
@@ -200,7 +156,7 @@ The backend must trust identity only from the authenticated security context.
 
 ---
 
-### 6.1.3 Response Structure
+#### 5.1.3 Response Structure
 
 For successful creation:
 
@@ -222,33 +178,21 @@ For successful creation:
 POST is used as an **idempotent provisioning endpoint**,
 and a repeated request may find an existing user.
 
-Therefore, the response statuses should be as follows:
+---
 
-1. Status when a new user is created:
-```http
-201 Created
-```
+#### 5.1.4 HTTP Response Codes
 
-2. Status when the user already exists:
-```http
-200 OK
-```
+| Situation              |                      Status |
+|------------------------|----------------------------:|
+| User created           |               `201 Created` |
+| User already exists    |               `201 Created` |
+| Invalid/missing token  |          `401 Unauthorized` |
+| Invalid request        |           `400 Bad Request` |
+| DB error               | `500 Internal Server Error` |
 
 ---
 
-### 6.1.4 HTTP Response Codes
-
-| Situation             |                      Status |
-| --------------------- | --------------------------: |
-| User created          |               `201 Created` |
-| User already exists   |                    `200 OK` |
-| Invalid/missing token |          `401 Unauthorized` |
-| Invalid request       |           `400 Bad Request` |
-| DB error              | `500 Internal Server Error` |
-
----
-
-### 6.1.5 Algorithm
+#### 5.1.5 Algorithm
 
 ```text
 1. Obtain the authenticated principal
@@ -268,7 +212,7 @@ The endpoint must be **idempotent by UID**.
 That is, a repeated call:
 
 ```http
-POST /users
+POST /v1/users
 ```
 
 for the same Keycloak UID must not create a second user.
@@ -278,8 +222,8 @@ Concurrent requests must be handled.
 For example, the frontend accidentally sends two requests simultaneously:
 
 ```text
-Request A ---> POST /users
-Request B ---> POST /users
+Request A ---> POST /v1/users
+Request B ---> POST /v1/users
 ```
 
 Both check:
@@ -297,19 +241,18 @@ INSERT
 Solution:
 
 1. `uid` must be the `PRIMARY KEY`;
-2. user creation must correctly handle a unique constraint violation;
-3. a transaction must be used.
+2. user creation must correctly handle a unique constraint violation.
 
 Thus, PostgreSQL guarantees that there cannot be two records for the same user.
 
 ---
 
-### 6.1.6 Sequence Diagram
+#### 5.1.6 Sequence Diagram
 
 ```text
 Frontend
    |
-   | POST /users + JWT
+   | POST /v1/users + JWT
    v
 Backend
    |
@@ -338,9 +281,9 @@ PostgreSQL
 ```
 ---
 
-## 6.2 GET `/users/{id}`
+### 5.2 GET `/v1/users/{id}`
 
-### 6.2.1 Purpose
+#### 5.2.1 Purpose
 
 The endpoint returns an aggregated user profile.
 
@@ -355,7 +298,7 @@ User Profile
 ```
 
 ```http
-GET /users/{id}
+GET /v1/users/{id}
 Authorization: Bearer <access_token>
 ```
 
@@ -369,7 +312,7 @@ where `{id}` is the user's UID.
 
 ---
 
-### 6.2.2 Response Structure
+#### 5.2.2 Response Structure
 
 ```json
 {
@@ -385,25 +328,26 @@ where `{id}` is the user's UID.
 
 where
 
-| Field             | Type    | Source     | Required     |
-| ----------------- | ------- | ---------- |------------|
-| `uid`             | String  | Keycloak   | Yes          |
-| `username`        | String  | Keycloak   | Yes          |
-| `email`           | String  | Keycloak   | Yes          |
-| `firstName`       | String  | Keycloak   | No*          |
-| `lastName`        | String  | Keycloak   | No*          |
-| `hasOrganization` | Boolean | PostgreSQL | Yes          |
-| `theme`           | Enum    | PostgreSQL | Yes          |
+| Field             | Type    | Source     | Required |
+|-------------------|---------|------------|----------|
+| `uid`             | String  | Keycloak   | Yes      |
+| `username`        | String  | Keycloak   | Yes      |
+| `email`           | String  | Keycloak   | Yes      |
+| `firstName`       | String  | Keycloak   | No*      |
+| `lastName`        | String  | Keycloak   | No*      |
+| `hasOrganization` | Boolean | PostgreSQL | Yes      |
+| `theme`           | Enum    | PostgreSQL | Yes      |
 
 > actual requiredness depends on the Keycloak registration settings.
 
 ---
 
-### 6.2.3 HTTP Response Codes
+#### 5.2.3 HTTP Response Codes
 
 | Situation                        |                      Status |
-| -------------------------------- | --------------------------: |
+|----------------------------------|----------------------------:|
 | Success                          |                    `200 OK` |
+| Not Found                        |             `404 Not Found` |
 | Invalid/missing token            |          `401 Unauthorized` |
 | Access to another user's profile |             `403 Forbidden` |
 | DB error                         | `500 Internal Server Error` |
@@ -420,7 +364,7 @@ error response for authorization:
 
 ---
 
-### 6.2.4 Authorization
+#### 5.2.4 Authorization
 
 Authorization rule - authenticated user can access only own profile.
 
@@ -445,7 +389,7 @@ the backend must return:
 
 ---
 
-### 6.2.5 Algorithm
+#### 5.2.5 Algorithm
 
 ```text
 1. Authenticate request
@@ -502,14 +446,14 @@ JWT
 The response is therefore built using the following scheme:
 
 ```text
-GET /users/{id}
+GET /v1/users/{id}
        |
        +--> JWT claims
        |
        +--> PostgreSQL
 ```
 
-### 6.2.6 Sequence Diagram
+#### 5.2.6 Sequence Diagram
 
 ```text
 Frontend
@@ -544,9 +488,9 @@ Backend
 
 ---
 
-# 7 Database Data Model
+## 6 Database Data Model
 
-## 7.1 User Model
+### 6.1 User Model
 
 ```text
 user
@@ -555,14 +499,14 @@ uid       PK
 theme
 ```
 
-### `uid`
+#### `uid`
 
 * required;
 * unique;
 * user identifier;
 * matches the Keycloak User UID.
 
-### `theme`
+#### `theme`
 
 Allowed values:
 
@@ -575,7 +519,7 @@ When the user is first created, the default value `WHITE` must be set.
 
 ---
 
-## 7.2 Organization Model
+### 6.2 Organization Model
 
 Although the organization table is not described in the current requirement, a relationship between the user and organizations must exist to implement `hasOrganization`.
 
@@ -613,17 +557,17 @@ For this API, `EXISTS` is sufficient; there is no need to load all organizations
 
 ---
 
-# 8. Test Scenarios
+## 7. Test Scenarios
 
-### 8.1 POST `/users`
+#### 7.1 POST `/users`
 
-#### **TC-01 — Create a New User**
+##### **TC-01 — Create a New User**
 
 ```text
 Given valid Keycloak JWT
 And user does not exist in PostgreSQL
 
-When POST /users
+When POST /v1/users
 
 Then 201 Created
 And user exists in PostgreSQL
@@ -631,47 +575,39 @@ And uid = JWT user uid
 And theme = default theme
 ```
 
-#### **TC-02 — Repeat Creation**
+##### **TC-02 — Repeat Creation**
 
 ```text
 Given user already exists
 
-When POST /users
+When POST /v1/users
 
 Then no duplicate user is created
 ```
 
-#### **TC-03 — missing token**
+##### **TC-03 — missing/invalid token**
 
 ```text
-When POST /users without Authorization
+When POST /v1/users without Authorization or with invalid JWT
 
 Then 401 Unauthorized
 ```
 
-#### **TC-04 — invalid token**
-
-```text
-When POST /users with invalid JWT
-
-Then 401 Unauthorized
-```
-
-#### **TC-05 — concurrent provisioning**
+##### **TC-04 — concurrent provisioning**
 
 ```text
 Given user does not exist
 
-When two POST /users requests arrive concurrently
+When two POST /v1/users requests arrive concurrently
 
 Then exactly one user exists
 ```
 
 ---
 
-### 8.2 GET `/users/{id}`
+#### 7.2 GET `/v1/users/{id}`
 
-#### **TC-06 — Get Own Profile**
+##### **TC-01 — Get Own Profile**
 
 ```text
 Given authenticated user A
@@ -683,7 +619,7 @@ And response contains Keycloak identity attributes
 And response contains PostgreSQL theme
 ```
 
-#### **TC-07 — Another User**
+##### **TC-02 — Another User**
 
 ```text
 Given authenticated user A
@@ -693,7 +629,7 @@ When GET /users/B
 Then 403 Forbidden
 ```
 
-#### **TC-08 — No Organization**
+##### **TC-03 — No Organization**
 
 ```text
 Given user has 0 organizations
@@ -701,7 +637,7 @@ Given user has 0 organizations
 Then hasOrganization = false
 ```
 
-#### **TC-09 — Organization Exists**
+##### **TC-04 — Organization Exists**
 
 ```text
 Given user has 1 organization
@@ -709,7 +645,7 @@ Given user has 1 organization
 Then hasOrganization = true
 ```
 
-#### **TC-10 — Multiple Organizations**
+##### **TC-05 — Multiple Organizations**
 
 ```text
 Given user has N organizations
@@ -717,4 +653,4 @@ Given user has N organizations
 Then hasOrganization = true
 ```
 
-# References
+## References

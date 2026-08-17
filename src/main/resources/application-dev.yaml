@@ -1,4 +1,6 @@
 spring:
+  devtools:
+    add-properties: true
   liquibase:
     change-log: classpath:db/changelog/db.changelog-dev.xml
   jpa:
@@ -14,13 +16,9 @@ spring:
     password: ${DATASOURCE_PASSWORD:plbk}
   security:
     oauth2:
-      client:
-        registration:
-          keycloak:
-            client-secret: ${KEYCLOAK_CLIENT_SECRET:LbLkIIODlKOPM1inpn9um9rYQGk9NLMAzoCRiEHB8wdRhmaRFWhRV4JC4vozz2JbdFzgAfVl5T4dgYD2ifU9WV}
-        provider:
-          keycloak:
-            issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:18081/realms/pool-booking}
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:18081/realms/pool-booking/protocol/openid-connect/certs}
 
 logging:
   level:

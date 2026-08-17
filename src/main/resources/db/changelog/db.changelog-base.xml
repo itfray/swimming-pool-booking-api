@@ -7,5 +7,6 @@
 
   <!-- Version 1 base migrations -->
   <include file="db/changelog/base/v1/v1_1_initial_schema.xml"/>
+  <include file="db/changelog/base/v1/v1_2_add_user.xml"/>
 
 </databaseChangeLog>
