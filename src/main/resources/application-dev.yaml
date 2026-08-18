@@ -1,9 +1,4 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:15432/plbk?currentSchema=plbk
-    username: plbk
-    password: plbk
-    driver-class-name: org.postgresql.Driver
   liquibase:
     change-log: classpath:db/changelog/db.changelog-dev.xml
   jpa:
@@ -13,6 +8,10 @@ spring:
       hibernate:
         format_sql: true
     show-sql: true
+  datasource:
+    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:15432/plbk?currentSchema=plbk}
+    username: ${DATASOURCE_USERNAME:plbk}
+    password: ${DATASOURCE_PASSWORD:plbk}
   security:
     oauth2:
       client:
@@ -23,12 +22,7 @@ spring:
           keycloak:
             issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:18081/realms/pool-booking}
 
-management:
-  server.port: ${MANAGEMENT_SERVER_PORT:8079}
-
 logging:
   level:
     root: INFO
     pro.itfray: DEBUG
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
