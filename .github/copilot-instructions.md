@@ -10,7 +10,7 @@ find suitable organizations, and book available spots online.
 ### Backend
 
 - **Java 21** is used as the programming language
-- **Spring Boot 4** is used for the API with the following starters:
+- **Spring Boot 4** is used as the framework with the following starters:
   - `spring-boot-starter-web` for REST API
   - `spring-boot-starter-actuator` for health checks and monitoring
   - `spring-boot-starter-data-jpa` for database access (JPA/Hibernate ORM)
@@ -35,9 +35,9 @@ find suitable organizations, and book available spots online.
 - **JUnit 5** for Java unit tests
 - **AssertJ** for fluent assertion statements
 - **Spring Boot Test** for integration and e2e tests
-- **Testcontainers** with PostgreSQL module for isolated database testing
-  - PostgreSQL container is provisioned and managed automatically for tests
-  - No manual database setup required for test execution
+- **Testcontainers** with PostgreSQL and Keycloak modules
+  - PostgreSQL container is provisioned and managed automatically for isolated database tests
+  - Keycloak container is provisioned and managed automatically for e2e tests with authentication and authorization
 
 ## Project and code guidelines
 
