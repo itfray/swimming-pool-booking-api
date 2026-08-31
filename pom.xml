@@ -29,6 +29,9 @@
     <!-- Mapstruct -->
     <mapstruct.version>1.6.3</mapstruct.version>
 
+    <!-- ArchUnit -->
+    <archunit.version>1.5.0</archunit.version>
+
     <!-- Testcontainers -->
     <testcontainers-keycloak.version>3.4.0</testcontainers-keycloak.version>
 
@@ -143,6 +146,14 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- ArchUnit -->
+    <dependency>
+      <groupId>com.tngtech.archunit</groupId>
+      <artifactId>archunit-junit5</artifactId>
+      <version>${archunit.version}</version>
       <scope>test</scope>
     </dependency>
 
