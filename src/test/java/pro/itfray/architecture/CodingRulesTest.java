@@ -16,27 +16,28 @@ import org.slf4j.Logger;
 @AnalyzeClasses(packages = "pro.itfray", importOptions = DoNotIncludeTests.class)
 class CodingRulesTest {
 
-  @ArchTest
-  final ArchRule no_java_util_logging = NO_CLASSES_SHOULD_USE_JAVA_UTIL_LOGGING;
+  @ArchTest static final ArchRule no_java_util_logging = NO_CLASSES_SHOULD_USE_JAVA_UTIL_LOGGING;
 
   @ArchTest
-  final ArchRule no_generic_exceptions = NO_CLASSES_SHOULD_THROW_GENERIC_EXCEPTIONS;
+  static final ArchRule no_generic_exceptions = NO_CLASSES_SHOULD_THROW_GENERIC_EXCEPTIONS;
 
   @ArchTest
-  final ArchRule no_access_to_standard_streams = NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS;
+  static final ArchRule no_access_to_standard_streams = NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS;
 
   @ArchTest
-  final ArchRule loggers_should_be_private_static_final =
-      fields().that().haveRawType(Logger.class)
-          .should().bePrivate()
-          .andShould().beStatic()
-          .andShould().beFinal()
+  static final ArchRule loggers_should_be_private_static_final =
+      fields()
+          .that()
+          .haveRawType(Logger.class)
+          .should()
+          .bePrivate()
+          .andShould()
+          .beStatic()
+          .andShould()
+          .beFinal()
           .allowEmptyShould(true);
 
-  @ArchTest
-  final ArchRule no_jodatime = NO_CLASSES_SHOULD_USE_JODATIME;
+  @ArchTest static final ArchRule no_jodatime = NO_CLASSES_SHOULD_USE_JODATIME;
 
-  @ArchTest
-  final ArchRule no_field_injection = NO_CLASSES_SHOULD_USE_FIELD_INJECTION;
-
+  @ArchTest static final ArchRule no_field_injection = NO_CLASSES_SHOULD_USE_FIELD_INJECTION;
 }

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/** DTO that represents a user profile returned by the API. */
 @Data
 @Builder
 @NoArgsConstructor

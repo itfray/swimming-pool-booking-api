@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import pro.itfray.domain.User;
 import pro.itfray.dto.UserProfileDto;
 
+/** Mapper that converts domain User to UserProfileDto. */
 @Mapper(componentModel = "spring")
 public interface UserProfileMapper {
 
@@ -18,10 +19,16 @@ public interface UserProfileMapper {
   String GIVEN_NAME_CLAIM = "given_name";
   String FAMILY_NAME_CLAIM = "family_name";
 
+  /**
+   * Convert User domain object to DTO containing user profile information.
+   *
+   * @param user domain user
+   * @param authentication current authentication (maybe JWT)
+   * @param hasOrganization whether the user has an organization
+   * @return populated UserProfileDto
+   */
   default UserProfileDto toDto(
-      @NonNull User user,
-      Authentication authentication,
-      boolean hasOrganization) {
+      @NonNull User user, Authentication authentication, boolean hasOrganization) {
     Objects.requireNonNull(user.getTheme(), "User theme must not be null");
 
     final var dto = new UserProfileDto();

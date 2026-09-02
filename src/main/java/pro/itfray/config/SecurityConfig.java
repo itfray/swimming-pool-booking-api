@@ -20,6 +20,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
+/** Spring Security configuration for the application. */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -28,22 +29,31 @@ public class SecurityConfig {
   private static final String REALM_CLAIM = "realm_access";
   private static final String ROLES_CLAIM = "roles";
 
+  /**
+   * Security filter chain configuration allowing actuator health to be public and enforcing
+   * JWT-based authentication for other endpoints.
+   */
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) {
-    http.authorizeHttpRequests(auth ->
-            auth.requestMatchers("/actuator/health").permitAll()
-                .requestMatchers("/actuator/health/*").permitAll()
-                .anyRequest().authenticated())
-        .oauth2ResourceServer(configurer ->
-            configurer.jwt(jwt ->
-                jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
-        .sessionManagement(session ->
-            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    http.authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers("/actuator/health")
+                    .permitAll()
+                    .requestMatchers("/actuator/health/*")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
+        .oauth2ResourceServer(
+            configurer ->
+                configurer.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .csrf(AbstractHttpConfigurer::disable);
 
     return http.build();
   }
 
+  /** Converter that maps a Jwt to Spring Security Authentication with granted authorities. */
   @Bean
   public Converter<Jwt, AbstractAuthenticationToken> jwtAuthenticationConverter() {
     final var jwtAuthenticationConverter = new JwtAuthenticationConverter();
@@ -51,6 +61,7 @@ public class SecurityConfig {
     return jwtAuthenticationConverter;
   }
 
+  /** Extracts granted authorities from a Keycloak JWT token, including realm roles. */
   @Bean
   public Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter() {
     final var delegate = new JwtGrantedAuthoritiesConverter();
@@ -69,9 +80,8 @@ public class SecurityConfig {
       @SuppressWarnings("unchecked")
       List<String> roles = (List<String>) realmAccess.get(ROLES_CLAIM);
 
-      final List<SimpleGrantedAuthority> keycloakAuthorities = roles.stream()
-          .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-          .toList();
+      final List<SimpleGrantedAuthority> keycloakAuthorities =
+          roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)).toList();
 
       grantedAuthorities.addAll(keycloakAuthorities);
       return grantedAuthorities;

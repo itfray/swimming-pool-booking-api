@@ -18,6 +18,7 @@ import pro.itfray.dto.UserProfileDto;
 import pro.itfray.mapper.UserProfileMapper;
 import pro.itfray.service.UserService;
 
+/** REST controller for user-related endpoints. */
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -27,22 +28,23 @@ public class UserController {
   private final UserService service;
   private final UserProfileMapper profileMapper;
 
+  /** Create a user based on the authenticated principal and return profile. */
   @PostMapping
   public ResponseEntity<UserProfileDto> createUser(
-      Principal principal,
-      Authentication authentication) {
+      Principal principal, Authentication authentication) {
     String uid = principal.getName();
     User user = service.create(UUID.fromString(uid));
     UserProfileDto profileDto = profileMapper.toDto(user, authentication, false);
     return ResponseEntity.status(HttpStatus.CREATED).body(profileDto);
   }
 
+  /** Return user profile for the provided id when caller is authorized. */
   @GetMapping("/{id}")
   @PreAuthorize("authentication.name == #id")
   public ResponseEntity<UserProfileDto> getUser(
-      @PathVariable String id,
-      Authentication authentication) {
-    return service.get(UUID.fromString(id))
+      @PathVariable String id, Authentication authentication) {
+    return service
+        .get(UUID.fromString(id))
         .map(user -> ResponseEntity.ok(profileMapper.toDto(user, authentication, false)))
         .orElseGet(() -> ResponseEntity.notFound().build());
   }

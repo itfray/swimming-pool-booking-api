@@ -14,9 +14,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * Base class for end-to-end tests that boot the full application.
+ */
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public abstract class AbstractE2ETest extends AbstractSpringIntegrationTest {
+public abstract class AbstractE2eTest extends AbstractSpringIntegrationTest {
 
   @LocalServerPort
   private int port;
@@ -26,6 +29,13 @@ public abstract class AbstractE2ETest extends AbstractSpringIntegrationTest {
     RestAssured.port = port;
   }
 
+  /**
+   * Get a JWT token from Keycloak using username and password.
+   *
+   * @param username the username
+   * @param password the password
+   * @return JWT access token
+   */
   protected String getToken(String username, String password) {
     final var restTemplate = new RestTemplate();
     final var httpHeaders = new HttpHeaders();

@@ -23,7 +23,8 @@ class UserProfileMapperTest {
   UserProfileMapper mapper = Mappers.getMapper(UserProfileMapper.class);
 
   @Test
-  @DisplayName("Should map full user profile when JWT contains username, email, given_name and family_name")
+  @DisplayName(
+      "Should map full user profile when JWT contains username, email, given_name and family_name")
   void shouldMapFullProfile() {
     UUID uid = UUID.randomUUID();
     User user = createUser(uid, Theme.BLACK);
@@ -68,17 +69,15 @@ class UserProfileMapperTest {
   @Test
   @DisplayName("Should throw NullPointerException when user is null")
   void shouldThrowWhenUserIsNull() {
-    //noinspection DataFlowIssue
-    assertThrows(NullPointerException.class,
-        () -> mapper.toDto(null, null, false));
+    // noinspection DataFlowIssue
+    assertThrows(NullPointerException.class, () -> mapper.toDto(null, null, false));
   }
 
   @Test
   @DisplayName("Should throw NullPointerException when user's theme is null")
   void shouldThrowWhenUserThemeIsNull() {
     User user = createUser(UUID.randomUUID(), null);
-    assertThrows(NullPointerException.class,
-        () -> mapper.toDto(user, null, false));
+    assertThrows(NullPointerException.class, () -> mapper.toDto(user, null, false));
   }
 
   @Test
@@ -133,12 +132,14 @@ class UserProfileMapperTest {
 
   private static JwtAuthenticationToken jwtAuthWithClaims(Map<String, Object> claims) {
     JwtAuthenticationToken auth = Mockito.mock(JwtAuthenticationToken.class);
-    when(auth.getPrincipal()).thenReturn(new Jwt(
-        "token",
-        Instant.now(),
-        Instant.now().plusSeconds(3600),
-        Map.of("alg", "none"),
-        claims));
+    when(auth.getPrincipal())
+        .thenReturn(
+            new Jwt(
+                "token",
+                Instant.now(),
+                Instant.now().plusSeconds(3600),
+                Map.of("alg", "none"),
+                claims));
 
     return auth;
   }

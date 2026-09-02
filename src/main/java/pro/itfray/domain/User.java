@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/** Application user entity. */
 @Entity
 @Getter
 @Setter
@@ -22,8 +23,7 @@ import lombok.ToString;
 @Table(name = "app_user")
 public class User {
 
-  @Id
-  private UUID uid;
+  @Id private UUID uid;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)

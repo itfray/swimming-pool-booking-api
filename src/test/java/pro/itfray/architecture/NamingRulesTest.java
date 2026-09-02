@@ -14,53 +14,72 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
 @AnalyzeClasses(packages = "pro.itfray", importOptions = DoNotIncludeTests.class)
-public class NamingRulesTest {
+class NamingRulesTest {
 
   @ArchTest
   static final ArchRule interfaces_should_not_have_names_ending_with_the_word_interface =
       noClasses().that().areInterfaces().should().haveNameMatching(".*Interface");
 
   @ArchTest
-  static final ArchRule interfaces_should_not_have_simple_class_names_containing_the_word_interface =
-      noClasses().that().areInterfaces().should().haveSimpleNameContaining("Interface");
+  static final ArchRule
+      interfaces_should_not_have_simple_class_names_containing_the_word_interface =
+          noClasses().that().areInterfaces().should().haveSimpleNameContaining("Interface");
 
   @ArchTest
-  static ArchRule controllers_should_be_suffixed =
+  static final ArchRule controllers_should_be_suffixed =
       classes()
-          .that().resideInAPackage("..controller..")
-          .or().areAnnotatedWith(RestController.class)
-          .or().areAnnotatedWith(Controller.class)
-          .should().haveSimpleNameEndingWith("Controller")
-          .orShould().haveSimpleNameEndingWith("ControllerImpl");
+          .that()
+          .resideInAPackage("..controller..")
+          .or()
+          .areAnnotatedWith(RestController.class)
+          .or()
+          .areAnnotatedWith(Controller.class)
+          .should()
+          .haveSimpleNameEndingWith("Controller")
+          .orShould()
+          .haveSimpleNameEndingWith("ControllerImpl");
 
   @ArchTest
-  static ArchRule controllers_should_not_have_rest_in_name =
+  static final ArchRule controllers_should_not_have_rest_in_name =
       classes()
-          .that().resideInAPackage("..controller..")
-          .should().haveSimpleNameNotContaining("Rest");
+          .that()
+          .resideInAPackage("..controller..")
+          .should()
+          .haveSimpleNameNotContaining("Rest");
 
   @ArchTest
-  static ArchRule services_should_be_suffixed =
+  static final ArchRule services_should_be_suffixed =
       classes()
-          .that().resideInAPackage("..service..")
-          .or().areAnnotatedWith(Service.class)
-          .should().haveSimpleNameEndingWith("Service")
-          .orShould().haveSimpleNameEndingWith("ServiceImpl");
+          .that()
+          .resideInAPackage("..service..")
+          .or()
+          .areAnnotatedWith(Service.class)
+          .should()
+          .haveSimpleNameEndingWith("Service")
+          .orShould()
+          .haveSimpleNameEndingWith("ServiceImpl");
 
   @ArchTest
-  static ArchRule repositories_should_be_suffixed =
+  static final ArchRule repositories_should_be_suffixed =
       classes()
-          .that().resideInAPackage("..repository..")
-          .or().areAnnotatedWith(Repository.class)
-          .should().haveSimpleNameEndingWith("Repository")
-          .orShould().haveSimpleNameEndingWith("RepositoryImpl");
+          .that()
+          .resideInAPackage("..repository..")
+          .or()
+          .areAnnotatedWith(Repository.class)
+          .should()
+          .haveSimpleNameEndingWith("Repository")
+          .orShould()
+          .haveSimpleNameEndingWith("RepositoryImpl");
 
   @ArchTest
-  static ArchRule mappers_should_be_suffixed =
+  static final ArchRule mappers_should_be_suffixed =
       classes()
-          .that().resideInAPackage("..mapper..")
-          .or().areAnnotatedWith(Mapper.class)
-          .should().haveSimpleNameEndingWith("Mapper")
-          .orShould().haveSimpleNameEndingWith("MapperImpl");
-
+          .that()
+          .resideInAPackage("..mapper..")
+          .or()
+          .areAnnotatedWith(Mapper.class)
+          .should()
+          .haveSimpleNameEndingWith("Mapper")
+          .orShould()
+          .haveSimpleNameEndingWith("MapperImpl");
 }

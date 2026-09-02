@@ -3,6 +3,9 @@ package pro.itfray;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 
+/**
+ * Base class for Spring integration tests that require containers.
+ */
 public class AbstractSpringIntegrationTest extends AbstractContainerizedTest {
 
   @DynamicPropertySource

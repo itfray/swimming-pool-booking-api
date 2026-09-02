@@ -8,12 +8,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import pro.itfray.AbstractE2ETest;
+import pro.itfray.AbstractE2eTest;
 import pro.itfray.domain.Theme;
 import pro.itfray.domain.User;
 import pro.itfray.repository.UserRepository;
 
-class UserControllerE2ETest extends AbstractE2ETest {
+class UserControllerE2eTest extends AbstractE2eTest {
 
   static final String URL = "/v1/users";
 
@@ -28,8 +28,7 @@ class UserControllerE2ETest extends AbstractE2ETest {
 
   String token;
 
-  @Autowired
-  UserRepository repository;
+  @Autowired UserRepository repository;
 
   @BeforeEach
   void setUpToken() {
