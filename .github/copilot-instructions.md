@@ -38,6 +38,8 @@ find suitable organizations, and book available spots online.
 - **Testcontainers** with PostgreSQL and Keycloak modules
   - PostgreSQL container is provisioned and managed automatically for isolated database tests
   - Keycloak container is provisioned and managed automatically for e2e tests with authentication and authorization
+- **ArchUnit** for architecture tests to enforce coding standards and architectural rules
+- **Checkstyle** for code style validation according to Google Java Style Guide
 
 ## Project and code guidelines
 
@@ -47,6 +49,7 @@ find suitable organizations, and book available spots online.
 - End-to-end tests are required
   - End-to-end tests should focus on core functionality
   - End-to-end tests should validate accessibility
+- Code style should correspond to the style guide
 - Always follow good security practices
 - Follow RESTful API design principles
 - Use scripts to perform actions when available
