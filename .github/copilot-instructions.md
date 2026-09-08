@@ -5,60 +5,42 @@ in poolside relaxation areas. Registered organizations can manage their location
 recreation areas, and booking availability. Customers can search for nearby recreation areas,
 find suitable organizations, and book available spots online.
 
-## Tech stack in use
+## Commands
+- Build: ./mvnw compile
+- Test: ./mvnw test (unit, integration, E2E, needs docker)
+- Lint: ./mvnw checkstyle:check (fix errors before pushing)
 
-### Backend
+## Conventions
+- Java 21
+- Spring Boot 4 as the framework
+- Spring Web MVC for REST API
+- JPA/Hibernate ORM for database access
+- Lombok for boilerplate code
+- MapStruct for mapping between layers
+- JUnit 5 and AssertJ for tests
+- Spring Boot Test for integration tests
+- Testcontainers and Rest Assured for E2E tests
+- Checkstyle for code style validation according to Google Java Style Guide
+- ArchUnit for architecture tests to enforce coding standards and architectural rules
+- JoCoCo for code coverage measurement
+- Liquibase for database schema versioning and migrations
+- Docker for local development environment orchestration
+- PostgreSQL 15 is the database, managed by migrations
+- Keycloak 26.7 is used for identity and access management. OAuth2 authentication and authorization
+- Every endpoint needs an integration test in src/test.
 
-- **Java 21** is used as the programming language
-- **Spring Boot 4** is used as the framework with the following starters:
-  - `spring-boot-starter-web` for REST API
-  - `spring-boot-starter-actuator` for health checks and monitoring
-  - `spring-boot-starter-data-jpa` for database access (JPA/Hibernate ORM)
-  - `spring-boot-starter-validation` for input validation
-  - `spring-boot-starter-security` for authentication and authorization
-  - `spring-boot-starter-oauth2-resource-server` for OAuth2 resource server configuration
-  - `spring-boot-starter-liquibase` for database schema versioning and migrations
-  - `spring-boot-devtools` for development experience improvements
-- **PostgreSQL** is the database, managed by Liquibase for migrations
-  - Separate databases for dev, staging, and prod environments
-  - For end-to-end testing, a new database is created via Testcontainers,
-    populated during tests, then removed automatically after tests complete
-- **Keycloak 26.7** is used for identity and access management (IAM)
-  - Deployed via Docker Compose alongside PostgreSQL
-  - Provides OAuth2/OIDC authentication and authorization
-- **Docker Compose** for local development environment orchestration
-  - PostgreSQL 15-alpine container
-  - Keycloak container with realm import configuration
+## Architecture
 
-### Testing
+- domain/ holds entities and domain logic
+- service/ holds application use cases
+- mapper/ holds logic of mapping between dto and domain
+- dto/ holds DTOs passed from/to outside
+- controller/ holds REST controllers
+- repository/ holds logic of interaction with database
+- config/ holds application configurations
+- docs/ holds project documentation
 
-- **JUnit 5** for Java unit tests
-- **AssertJ** for fluent assertion statements
-- **Spring Boot Test** for integration and e2e tests
-- **Testcontainers** with PostgreSQL and Keycloak modules
-  - PostgreSQL container is provisioned and managed automatically for isolated database tests
-  - Keycloak container is provisioned and managed automatically for e2e tests with authentication and authorization
-- **ArchUnit** for architecture tests to enforce coding standards and architectural rules
-- **Checkstyle** for code style validation according to Google Java Style Guide
+## Things gets wrong
 
-## Project and code guidelines
-
-- Always use type hints in any language which supports them
-- Unit tests are required, and are required to pass before PR
-  - Unit tests should focus on core functionality
-- End-to-end tests are required
-  - End-to-end tests should focus on core functionality
-  - End-to-end tests should validate accessibility
-- Code style should correspond to the style guide
-- Always follow good security practices
-- Follow RESTful API design principles
-- Use scripts to perform actions when available
-
-## Project structure
-
-- `src/main/java`: Java backend code
-- `src/test/java`: Unit tests and integration tests
-- `src/main/resources`: Files to be available in the classpath of the main code
-- `src/test/resources`: Files to be available in the classpath of the test code
-- `scripts/` : Development, deployment and testing scripts
-- `docs/` : Project documentation to be kept in sync at all times
+- Do not bump dependency versions
+- Never edit generated classes
