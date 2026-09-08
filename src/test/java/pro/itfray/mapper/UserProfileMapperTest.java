@@ -107,6 +107,24 @@ class UserProfileMapperTest {
   }
 
   @Test
+  @DisplayName("Should handle JWT authentication token with null claims")
+  void shouldHandleNullClaims() {
+    UUID uid = UUID.randomUUID();
+    User user = createUser(uid, Theme.WHITE);
+
+    JwtAuthenticationToken auth = jwtAuthWithNullClaims();
+
+    UserProfileDto dto = mapper.toDto(user, auth, false);
+
+    assertThat(dto.getUsername()).isNull();
+    assertThat(dto.getEmail()).isNull();
+    assertThat(dto.getFirstName()).isNull();
+    assertThat(dto.getLastName()).isNull();
+    assertThat(dto.getUid()).isEqualTo(uid);
+    assertThat(dto.getTheme()).isEqualTo("WHITE");
+  }
+
+  @Test
   @DisplayName("Should map available claims and leave missing JWT claims as null in DTO")
   void shouldHandleMissingClaims() {
     UUID uid = UUID.randomUUID();
@@ -147,6 +165,14 @@ class UserProfileMapperTest {
   private static JwtAuthenticationToken jwtAuthWithNullPrincipal() {
     JwtAuthenticationToken auth = Mockito.mock(JwtAuthenticationToken.class);
     when(auth.getPrincipal()).thenReturn(null);
+    return auth;
+  }
+
+  private static JwtAuthenticationToken jwtAuthWithNullClaims() {
+    JwtAuthenticationToken auth = Mockito.mock(JwtAuthenticationToken.class);
+    Jwt jwt = Mockito.mock(Jwt.class);
+    when(jwt.getClaims()).thenReturn(null);
+    when(auth.getPrincipal()).thenReturn(jwt);
     return auth;
   }
 }
