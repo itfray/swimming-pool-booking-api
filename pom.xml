@@ -46,6 +46,10 @@
     <!-- JaCoCo -->
     <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
 
+    <!-- PITest -->
+    <pitest.version>1.30.0</pitest.version>
+    <pitest-junit5-plugin.version>1.2.3</pitest-junit5-plugin.version>
+
     <!-- Checkstyle -->
     <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
     <checkstyle.version>14.1.0</checkstyle.version>
@@ -150,6 +154,14 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- PITest -->
+    <dependency>
+      <groupId>org.pitest</groupId>
+      <artifactId>pitest-parent</artifactId>
+      <version>${pitest.version}</version>
+      <type>pom</type>
+    </dependency>
+
     <!-- ArchUnit -->
     <dependency>
       <groupId>com.tngtech.archunit</groupId>
@@ -214,6 +226,32 @@
             <includeTestSourceDirectory>true</includeTestSourceDirectory>
           </configuration>
         </plugin>
+
+        <plugin>
+          <groupId>org.pitest</groupId>
+          <artifactId>pitest-maven</artifactId>
+          <version>${pitest.version}</version>
+          <dependencies>
+            <dependency>
+              <groupId>org.pitest</groupId>
+              <artifactId>pitest-junit5-plugin</artifactId>
+              <version>${pitest-junit5-plugin.version}</version>
+            </dependency>
+          </dependencies>
+          <configuration>
+            <failWhenNoMutations>true</failWhenNoMutations>
+            <thresholdPrecision>2</thresholdPrecision>
+            <mutationThreshold>70.00</mutationThreshold>
+            <targetClasses>
+              <param>pro.itfray.service*</param>
+              <param>pro.itfray.mapper*</param>
+            </targetClasses>
+            <targetTests>
+              <param>pro.itfray.service*</param>
+              <param>pro.itfray.mapper*</param>
+            </targetTests>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -260,7 +298,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>${maven-checkstyle-plugin.version}</version>
         <executions>
           <execution>
             <id>validate</id>
@@ -328,6 +365,19 @@
       </plugin>
 
       <plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <executions>
+          <execution>
+            <id>mutation-coverage</id>
+            <goals>
+              <goal>mutationCoverage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
@@ -339,11 +389,21 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>${maven-checkstyle-plugin.version}</version>
         <reportSets>
           <reportSet>
             <reports>
               <report>checkstyle</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      <plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>report</report>
             </reports>
           </reportSet>
         </reportSets>
