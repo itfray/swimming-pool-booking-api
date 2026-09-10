@@ -40,6 +40,8 @@
 
     <!-- Maven Plugin -->
     <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
+    <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+    <maven-failsafe-plugin.version>3.6.0</maven-failsafe-plugin.version>
     <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
     <maven-project-info-reports-plugin.version>3.9.0</maven-project-info-reports-plugin.version>
 
@@ -228,6 +230,34 @@
         </plugin>
 
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven-surefire-plugin.version}</version>
+          <configuration>
+            <!-- Exclude integration and E2E from test phase -->
+            <excludes>
+              <exclude>**/*IntegrationTest.java</exclude>
+              <exclude>**/*ApplicationTest.java</exclude>
+              <exclude>**/*E2eTest.java</exclude>
+            </excludes>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>${maven-failsafe-plugin.version}</version>
+          <!-- Include integration and E2E to integration-test phase -->
+          <configuration>
+            <includes>
+              <include>**/*IntegrationTest.java</include>
+              <include>**/*ApplicationTest.java</include>
+              <include>**/*E2eTest.java</include>
+            </includes>
+          </configuration>
+        </plugin>
+
+        <plugin>
           <groupId>org.pitest</groupId>
           <artifactId>pitest-maven</artifactId>
           <version>${pitest.version}</version>
@@ -242,14 +272,17 @@
             <failWhenNoMutations>true</failWhenNoMutations>
             <thresholdPrecision>2</thresholdPrecision>
             <mutationThreshold>70.00</mutationThreshold>
-            <targetClasses>
-              <param>pro.itfray.service*</param>
-              <param>pro.itfray.mapper*</param>
-            </targetClasses>
-            <targetTests>
-              <param>pro.itfray.service*</param>
-              <param>pro.itfray.mapper*</param>
-            </targetTests>
+            <excludedClasses>
+              <class>pro.itfray.config*</class>
+              <class>pro.itfray.PoolBookingApplication*</class>
+            </excludedClasses>
+            <excludedTestClasses>
+              <class>pro.itfray.architecture*</class>
+              <class>pro.itfray.*IntegrationTest</class>
+              <class>pro.itfray.*E2eTest</class>
+              <class>pro.itfray.*ApplicationTest</class>
+              <class>pro.itfray.*ContainerizedTest</class>
+            </excludedTestClasses>
           </configuration>
         </plugin>
       </plugins>
@@ -315,20 +348,20 @@
         <version>${jacoco-maven-plugin.version}</version>
         <executions>
           <execution>
-            <id>pre-test</id>
+            <id>pre-unit-test</id>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
           </execution>
           <execution>
-            <id>post-test</id>
+            <id>post-unit-test</id>
             <phase>test</phase>
             <goals>
               <goal>report</goal>
             </goals>
           </execution>
           <execution>
-            <id>check</id>
+            <id>code-coverage</id>
             <goals>
               <goal>check</goal>
             </goals>
@@ -360,6 +393,18 @@
                 </rule>
               </rules>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>

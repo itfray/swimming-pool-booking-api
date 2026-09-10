@@ -12,6 +12,6 @@ import pro.itfray.config.SecurityConfig;
 @Import(SecurityConfig.class)
 @WebMvcTest(controllers = {
     UserController.class})
-public abstract class AbstractWebMvcTest {
+public abstract class AbstractWebMvcIntegrationTest {
 
 }

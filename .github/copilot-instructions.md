@@ -6,9 +6,17 @@ recreation areas, and booking availability. Customers can search for nearby recr
 find suitable organizations, and book available spots online.
 
 ## Commands
-- Build: ./mvnw compile
-- Test: ./mvnw test (unit, integration, E2E, needs docker)
-- Lint: ./mvnw checkstyle:check (fix errors before pushing)
+- Lint: `./mvnw checkstyle:check` (zero errors, must finish with "0 Checkstyle violations")
+- Build: `./mvnw compile` (must finish with "BUILD SUCCESS")
+- Test: (all green, must finish with "Failures: 0, Errors: 0, Skipped: 0")
+  - `./mvnw test` (unit)
+  - `./mvnw integration-test -DskipTests` (integration and E2E, needs docker)
+- Verify: `./mvnw verify` (run all tests and checks)
+  - Code coverage check (must finish with "All coverage checks have been met", to recheck `./mvnw verify -DskipITs`)
+  - Mutation coverage check (must not finish with "Mutation score of %f is below threshold", to recheck `./mvnw verify -DskipITs`)
+
+Run all commands before reporting any task complete, and paste the output.
+If a code style rule violates, a test fails, fix the code, not the rule or the test.
 
 ## Conventions
 - Java 21
@@ -23,6 +31,7 @@ find suitable organizations, and book available spots online.
 - Checkstyle for code style validation according to Google Java Style Guide
 - ArchUnit for architecture tests to enforce coding standards and architectural rules
 - JoCoCo for code coverage measurement
+- PITest for a mutation testing
 - Liquibase for database schema versioning and migrations
 - Docker for local development environment orchestration
 - PostgreSQL 15 is the database, managed by migrations
