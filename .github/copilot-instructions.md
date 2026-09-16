@@ -10,10 +10,10 @@ find suitable organizations, and book available spots online.
 - Build: `./mvnw compile` (must finish with "BUILD SUCCESS")
 - Test: (all green, must finish with "Failures: 0, Errors: 0, Skipped: 0")
   - `./mvnw test` (unit)
+  - `./mvnw -Ppitest -DtargetClasses=${CHANGED_CLASSES_PACKAGE} test-compile` (mutation testing, must not finish with "Mutation score of %.2f is below threshold of %.2f")
   - `./mvnw integration-test -DskipTests` (integration and E2E, needs docker)
 - Verify: `./mvnw verify` (run all tests and checks)
   - Code coverage check (must finish with "All coverage checks have been met", to recheck `./mvnw verify -DskipITs`)
-  - Mutation coverage check (must not finish with "Mutation score of %f is below threshold", to recheck `./mvnw verify -DskipITs`)
 
 Run all commands before reporting any task complete, and paste the output.
 If a code style rule violates, a test fails, fix the code, not the rule or the test.
