@@ -6,16 +6,16 @@ recreation areas, and booking availability. Customers can search for nearby recr
 find suitable organizations, and book available spots online.
 
 ## Commands
-- Lint: `./mvnw checkstyle:check` (zero errors, must finish with "0 Checkstyle violations")
+- Lint: `./mvnw checkstyle:check` (must finish with "0 Checkstyle violations")
 - Build: `./mvnw compile` (must finish with "BUILD SUCCESS")
-- Test: (all green, must finish with "Failures: 0, Errors: 0, Skipped: 0")
-  - `./mvnw test` (unit)
+- Test: (must finish with "Failures: 0, Errors: 0, Skipped: 0")
+  - `./mvnw test -DskipITs` (unit)
   - `./mvnw -Ppitest -DtargetClasses=${CHANGED_CLASSES_PACKAGE} test-compile` (mutation testing, must not finish with "Mutation score of %.2f is below threshold of %.2f")
-  - `./mvnw integration-test -DskipTests` (integration and E2E, needs docker)
+  - `./mvnw integration-test -DskipTests` (integration and E2E)
 - Verify: `./mvnw verify` (run all tests and checks)
-  - Code coverage check (must finish with "All coverage checks have been met", to recheck `./mvnw verify -DskipITs`)
+  - Code coverage check (must finish with "All coverage checks have been met")
 
-Run all commands before reporting any task complete, and paste the output.
+Run all these commands before reporting any task complete, and paste the output.
 If a code style rule violates, a test fails, fix the code, not the rule or the test.
 
 ## Conventions
