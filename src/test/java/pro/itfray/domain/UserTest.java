@@ -15,7 +15,7 @@ class UserTest {
     User user = new User(uid, Theme.WHITE);
 
     // noinspection EqualsWithItself
-    assertThat(user.equals(user)).isTrue();
+    assertThat(user).isEqualTo(user);
   }
 
   @Test
@@ -24,8 +24,7 @@ class UserTest {
     UUID uid = UUID.randomUUID();
     User user = new User(uid, Theme.WHITE);
 
-    // noinspection ConstantValue
-    assertThat(user.equals(null)).isFalse();
+    assertThat(user).isNotEqualTo(null);
   }
 
   @Test
@@ -34,8 +33,8 @@ class UserTest {
     UUID uid = UUID.randomUUID();
     User user = new User(uid, Theme.WHITE);
 
-    // noinspection EqualsBetweenInconvertibleTypes
-    assertThat(user.equals("not a user")).isFalse();
+    // noinspection AssertBetweenInconvertibleTypes
+    assertThat(user).isNotEqualTo("not a user");
   }
 
   @Test
@@ -45,7 +44,7 @@ class UserTest {
     User user1 = new User(uid, Theme.WHITE);
     User user2 = new User(uid, Theme.BLACK);
 
-    assertThat(user1.equals(user2)).isTrue();
+    assertThat(user1).isEqualTo(user2);
   }
 
   @Test
@@ -54,7 +53,7 @@ class UserTest {
     User user1 = new User(UUID.randomUUID(), Theme.WHITE);
     User user2 = new User(UUID.randomUUID(), Theme.WHITE);
 
-    assertThat(user1.equals(user2)).isFalse();
+    assertThat(user1).isNotEqualTo(user2);
   }
 
   @Test
@@ -64,7 +63,7 @@ class UserTest {
     User user1 = new User(null, Theme.WHITE);
     User user2 = new User(uid, Theme.WHITE);
 
-    assertThat(user1.equals(user2)).isFalse();
+    assertThat(user1).isNotEqualTo(user2);
   }
 
   @Test
@@ -73,10 +72,7 @@ class UserTest {
     UUID uid = UUID.randomUUID();
     User user = new User(uid, Theme.WHITE);
 
-    int hashCode1 = user.hashCode();
-    int hashCode2 = user.hashCode();
-
-    assertThat(hashCode1).isEqualTo(hashCode2);
+    assertThat(user).hasSameHashCodeAs(user);
   }
 
   @Test
@@ -85,7 +81,6 @@ class UserTest {
     User user1 = new User(UUID.randomUUID(), Theme.WHITE);
     User user2 = new User(UUID.randomUUID(), Theme.BLACK);
 
-    assertThat(user1.hashCode()).isEqualTo(user2.hashCode());
+    assertThat(user1).hasSameHashCodeAs(user2);
   }
 }
-

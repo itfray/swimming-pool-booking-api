@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.util.UUID;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,7 @@ class UserControllerE2eTest extends AbstractE2eTest {
     token = getToken(USERNAME, PASSWORD);
   }
 
-  @BeforeEach
+  @AfterEach
   void tearDown() {
     repository.deleteAll();
   }

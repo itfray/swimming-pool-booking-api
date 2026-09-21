@@ -9,6 +9,6 @@ import pro.itfray.AbstractSpringIntegrationTest;
  */
 @DataJpaTest
 @ActiveProfiles("test")
-public class AbstractDataJpaIntegrationTest extends AbstractSpringIntegrationTest {
+public abstract class AbstractDataJpaIntegrationTest extends AbstractSpringIntegrationTest {
 
 }
