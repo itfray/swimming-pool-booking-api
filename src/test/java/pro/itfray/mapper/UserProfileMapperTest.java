@@ -2,6 +2,7 @@ package pro.itfray.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.Instant;
@@ -11,7 +12,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
-import org.mockito.Mockito;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import pro.itfray.domain.Theme;
@@ -149,7 +149,7 @@ class UserProfileMapperTest {
   }
 
   private static JwtAuthenticationToken jwtAuthWithClaims(Map<String, Object> claims) {
-    JwtAuthenticationToken auth = Mockito.mock(JwtAuthenticationToken.class);
+    JwtAuthenticationToken auth = mock(JwtAuthenticationToken.class);
     when(auth.getPrincipal())
         .thenReturn(
             new Jwt(
@@ -163,14 +163,14 @@ class UserProfileMapperTest {
   }
 
   private static JwtAuthenticationToken jwtAuthWithNullPrincipal() {
-    JwtAuthenticationToken auth = Mockito.mock(JwtAuthenticationToken.class);
+    JwtAuthenticationToken auth = mock(JwtAuthenticationToken.class);
     when(auth.getPrincipal()).thenReturn(null);
     return auth;
   }
 
   private static JwtAuthenticationToken jwtAuthWithNullClaims() {
-    JwtAuthenticationToken auth = Mockito.mock(JwtAuthenticationToken.class);
-    Jwt jwt = Mockito.mock(Jwt.class);
+    JwtAuthenticationToken auth = mock(JwtAuthenticationToken.class);
+    Jwt jwt = mock(Jwt.class);
     when(jwt.getClaims()).thenReturn(null);
     when(auth.getPrincipal()).thenReturn(jwt);
     return auth;
