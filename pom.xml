@@ -55,6 +55,9 @@
     <!-- Checkstyle -->
     <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
     <checkstyle.version>14.1.0</checkstyle.version>
+
+    <!-- Sonar -->
+    <sonar.organization>itfray</sonar.organization>
   </properties>
 
   <dependencies>
