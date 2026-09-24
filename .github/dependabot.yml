@@ -7,7 +7,7 @@ version: 2
 updates:
   - package-ecosystem: "maven"
     # Look for a `pom.xml` in the `root` directory
-    directory: "/" 
+    directory: "/"
     # Check for updates once a day
     schedule:
       interval: "daily"
@@ -18,8 +18,15 @@ updates:
           - "patch"
     allow:
       - dependency-name: '*'
-        update-types: 'version-update:semver-minor' 
-      
+        update-types: 'version-update:semver-minor'
+    commit-message:
+      prefix: 'build: '
+    pull-request-branch-name:
+      separator: '-'
+      word-separator: '-'
+      branch-name-case: 'lowercase'
+      max-length: 20
+
   - package-ecosystem: "docker-compose"
     # Look for a `docker-compose.yaml` in the `root` directory
     directory: "/"
@@ -29,12 +36,10 @@ updates:
     allow:
       - dependency-name: '*'
         update-types: 'version-update:semver-minor'
-
-commit-message:
-  prefix: 'build: '
-
-pull-request-branch-name:
-  separator: '-'
-  word-separator: '-'
-  branch-name-case: 'lowercase'
-  max-length: 20
+    commit-message:
+      prefix: 'build: '
+    pull-request-branch-name:
+      separator: '-'
+      word-separator: '-'
+      branch-name-case: 'lowercase'
+      max-length: 20
