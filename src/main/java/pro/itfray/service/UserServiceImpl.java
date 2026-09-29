@@ -1,9 +1,12 @@
 package pro.itfray.service;
 
+import io.micrometer.observation.annotation.ObservationKeyValue;
+import io.micrometer.observation.annotation.Observed;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import pro.itfray.domain.Theme;
@@ -11,6 +14,7 @@ import pro.itfray.domain.User;
 import pro.itfray.repository.UserRepository;
 
 /** Implementation of {@link UserService} providing user lifecycle operations. */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -23,14 +27,16 @@ public class UserServiceImpl implements UserService {
    * @param uid user id
    * @return created or existing user
    */
-  public User create(@NonNull UUID uid) {
+  @Observed(name = "user.create")
+  public User create(@ObservationKeyValue("uid") @NonNull UUID uid) {
     return repository
         .findById(uid)
         .orElseGet(
             () -> {
               try {
-                User user = new User(uid, Theme.WHITE);
-                return repository.save(user);
+                User createdUser = repository.save(new User(uid, Theme.WHITE));
+                log.debug("A user '{}' was created", uid);
+                return createdUser;
               } catch (DataIntegrityViolationException ex) {
                 return repository.findById(uid).orElseThrow(() -> ex);
               }
@@ -43,7 +49,8 @@ public class UserServiceImpl implements UserService {
    * @param uid user id
    * @return optional user
    */
-  public Optional<User> get(@NonNull UUID uid) {
+  @Observed(name = "user.get")
+  public Optional<User> get(@ObservationKeyValue("uid") @NonNull UUID uid) {
     return repository.findById(uid);
   }
 }
