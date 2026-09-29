@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  This configuration outputs logs to the console and also sends them to OpenTelemetry.
+  See pro.itfray.config.OpenTelemetryConfiguration.InstallOpenTelemetryAppender for the code parts.
+-->
+<configuration>
+
+  <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+  <appender name="OpenTelemetry"
+    class="io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender">
+  </appender>
+
+  <root level="INFO">
+    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="OpenTelemetry"/>
+  </root>
+
+</configuration>
