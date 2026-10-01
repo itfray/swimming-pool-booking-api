@@ -18,8 +18,23 @@ spring:
         jwt:
           jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:18484/realms/test/protocol/openid-connect/certs}
 
+management:
+  otlp:
+    metrics:
+      export:
+        url: ${OTLP_METRICS_EXPORT_URL:http://localhost:14318/v1/metrics}
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: ${OTLP_TRACING_EXPORT_URL:http://localhost:14318/v1/traces}
+    logging:
+      export:
+        otlp:
+          endpoint: ${OTLP_LOGGING_EXPORT_URL:http://localhost:14318/v1/logs}
+
 logging:
   level:
     root: INFO
-    pro.itfray: DEBUG
+    pro.itfray: TRACE
     org.springframework.test.context.cache: INFO

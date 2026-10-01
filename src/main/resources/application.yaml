@@ -5,6 +5,9 @@ spring:
     name: swimming-pool-booking-api
   devtools:
     add-properties: false
+  task:
+    execution:
+      propagate-context: true
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-prod.xml
@@ -37,6 +40,8 @@ spring:
 
 management:
   server.port: ${MANAGEMENT_SERVER_PORT:8081}
+  observations:
+    annotations.enabled: true
   endpoints:
     access:
       default: read_only
@@ -53,6 +58,23 @@ management:
         include: livenessState
       readiness:
         include: readinessState, db, diskSpace
+  tracing:
+    sampling:
+      probability: 0.1
+  otlp:
+    metrics:
+      export:
+        url: ${OTLP_METRICS_EXPORT_URL}
+        step: 1m
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: ${OTLP_TRACING_EXPORT_URL}
+    logging:
+      export:
+        otlp:
+          endpoint: ${OTLP_LOGGING_EXPORT_URL}
 
 logging:
   level:

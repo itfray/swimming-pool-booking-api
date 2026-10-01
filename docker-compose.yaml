@@ -35,6 +35,15 @@ services:
     networks:
       - poolbooking-network
 
+  grafana-lgtm:
+    image: grafana/otel-lgtm:0.34.0
+    ports:
+      - "13000:3000" # UI
+      - "14317:4317"
+      - "14318:4318"
+    networks:
+      - poolbooking-network
+
 volumes:
   poolbooking_db:
     driver: local
