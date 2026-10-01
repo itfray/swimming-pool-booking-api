@@ -16,7 +16,7 @@ public abstract class AbstractContainerizedTest {
       .withUsername("testuser")
       .withPassword("testpass");
 
-  static final KeycloakContainer KEYCLOAK = new KeycloakContainer("quay.io/keycloak/keycloak:26.7")
+  static final KeycloakContainer KEYCLOAK = new KeycloakContainer("quay.io/keycloak/keycloak:26.8")
       .withEnv("KC_BOOTSTRAP_ADMIN_USERNAME", "admin")
       .withEnv("KC_BOOTSTRAP_ADMIN_PASSWORD", "admin")
       .withRealmImportFile("keycloak/realm.json");
