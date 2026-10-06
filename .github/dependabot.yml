@@ -23,7 +23,7 @@ updates:
         update-types:
           - 'version-update:semver-minor'
     ignore:
-      - dependency-name: 'opentelemetry-logback-appender-1.0'
+      - dependency-name: 'io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0'
         update-types:
           - 'version-update:semver-patch'
     commit-message:
