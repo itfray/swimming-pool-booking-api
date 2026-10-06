@@ -36,7 +36,7 @@ services:
       - poolbooking-network
 
   grafana-lgtm:
-    image: grafana/otel-lgtm:0.34.0
+    image: grafana/otel-lgtm:0.35.0
     ports:
       - "13000:3000" # UI
       - "14317:4317"
