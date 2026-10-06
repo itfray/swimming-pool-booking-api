@@ -8,6 +8,8 @@ updates:
   - package-ecosystem: "maven"
     # Look for a `pom.xml` in the `root` directory
     directory: "/"
+    exclude-paths:
+      - ".mvn/**"
     # Check for updates once a day
     schedule:
       interval: "daily"
