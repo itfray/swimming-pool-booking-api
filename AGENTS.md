@@ -5,6 +5,20 @@ in poolside relaxation areas. Registered organizations can manage their location
 recreation areas, and booking availability. Customers can search for nearby recreation areas,
 find suitable organizations, and book available spots online.
 
+## Agent skills
+
+### Issue tracker
+
+Local markdown files under `.scratch/` are used for tracking work in this repo. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default triage labels are used: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context domain docs layout. See `docs/agents/domain.md`.
+
 ## Commands
 - Lint: `./mvnw checkstyle:check` (must finish with "0 Checkstyle violations")
 - Build: `./mvnw compile` (must finish with "BUILD SUCCESS")
