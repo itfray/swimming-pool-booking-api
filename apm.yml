@@ -1,0 +1,13 @@
+name: swimming-pool-booking-api
+version: 1.0.0
+description: APM project for swimming-pool-booking-api
+author: Ilya Efarov
+# Which agent platforms to deploy to.
+# Resolution order: --target flag > this field > auto-detect from filesystem.
+# Accepted values: agent-skills, antigravity, claude, codex, copilot, cursor, gemini, grok-build, hermes, kiro, opencode, vscode, windsurf
+dependencies:
+  apm:
+    - Amplicode/spring-skills#bf19b3c41423a81dd5c2870c407110df846b56b7
+  mcp: []
+includes: auto
+scripts: {}
