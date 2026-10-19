@@ -1,7 +1,6 @@
 package pro.itfray.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -64,20 +63,6 @@ class UserProfileMapperTest {
     assertThat(dto.getEmail()).isNull();
     assertThat(dto.getFirstName()).isNull();
     assertThat(dto.getLastName()).isNull();
-  }
-
-  @Test
-  @DisplayName("Should throw NullPointerException when user is null")
-  void shouldThrowWhenUserIsNull() {
-    // noinspection DataFlowIssue
-    assertThrows(NullPointerException.class, () -> mapper.toDto(null, null, false));
-  }
-
-  @Test
-  @DisplayName("Should throw NullPointerException when user's theme is null")
-  void shouldThrowWhenUserThemeIsNull() {
-    User user = createUser(UUID.randomUUID(), null);
-    assertThrows(NullPointerException.class, () -> mapper.toDto(user, null, false));
   }
 
   @Test

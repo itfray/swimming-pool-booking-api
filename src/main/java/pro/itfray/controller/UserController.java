@@ -3,6 +3,8 @@ package pro.itfray.controller;
 import java.security.Principal;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +22,7 @@ import pro.itfray.service.UserService;
 
 /** REST controller for user-related endpoints. */
 @Validated
+@NullMarked
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/users")
@@ -31,7 +34,7 @@ public class UserController {
   /** Create a user based on the authenticated principal and return profile. */
   @PostMapping
   public ResponseEntity<UserProfileDto> createUser(
-      Principal principal, Authentication authentication) {
+      Principal principal, @Nullable Authentication authentication) {
     String uid = principal.getName();
     User user = service.create(UUID.fromString(uid));
     UserProfileDto profileDto = profileMapper.toDto(user, authentication, false);
@@ -42,7 +45,7 @@ public class UserController {
   @GetMapping("/{id}")
   @PreAuthorize("authentication.name == #id")
   public ResponseEntity<UserProfileDto> getUser(
-      @PathVariable String id, Authentication authentication) {
+      @PathVariable String id, @Nullable Authentication authentication) {
     return service
         .get(UUID.fromString(id))
         .map(user -> ResponseEntity.ok(profileMapper.toDto(user, authentication, false)))

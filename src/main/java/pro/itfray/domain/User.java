@@ -12,18 +12,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /** Application user entity. */
 @Entity
 @Getter
 @Setter
 @ToString
+@NullMarked
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "app_user")
 public class User {
 
-  @Id private UUID uid;
+  @Nullable @Id private UUID uid;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)

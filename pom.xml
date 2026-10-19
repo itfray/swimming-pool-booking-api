@@ -32,6 +32,9 @@
     <!-- Mapstruct -->
     <mapstruct.version>1.6.3</mapstruct.version>
 
+    <!-- JSpecify -->
+    <jspecify.version>1.0.1</jspecify.version>
+
     <!-- ArchUnit -->
     <archunit.version>1.5.0</archunit.version>
 
@@ -148,6 +151,12 @@
       <groupId>org.mapstruct</groupId>
       <artifactId>mapstruct</artifactId>
       <version>${mapstruct.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jspecify</groupId>
+      <artifactId>jspecify</artifactId>
+      <version>${jspecify.version}</version>
     </dependency>
 
     <!-- Spring Boot Test -->

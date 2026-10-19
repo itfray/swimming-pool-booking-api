@@ -4,9 +4,9 @@ import io.micrometer.observation.annotation.ObservationKeyValue;
 import io.micrometer.observation.annotation.Observed;
 import java.util.Optional;
 import java.util.UUID;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import pro.itfray.domain.Theme;
@@ -16,6 +16,7 @@ import pro.itfray.repository.UserRepository;
 /** Implementation of {@link UserService} providing user lifecycle operations. */
 @Slf4j
 @Service
+@NullMarked
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -28,7 +29,7 @@ public class UserServiceImpl implements UserService {
    * @return created or existing user
    */
   @Observed(name = "user.create")
-  public User create(@ObservationKeyValue("uid") @NonNull UUID uid) {
+  public User create(@ObservationKeyValue("uid") UUID uid) {
     return repository
         .findById(uid)
         .orElseGet(
@@ -50,7 +51,7 @@ public class UserServiceImpl implements UserService {
    * @return optional user
    */
   @Observed(name = "user.get")
-  public Optional<User> get(@ObservationKeyValue("uid") @NonNull UUID uid) {
+  public Optional<User> get(@ObservationKeyValue("uid") UUID uid) {
     return repository.findById(uid);
   }
 }

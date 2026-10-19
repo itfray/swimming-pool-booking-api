@@ -99,18 +99,4 @@ class UserServiceImplTest {
 
     assertThat(user).isEmpty();
   }
-
-  @Test
-  @DisplayName("Should throw NullPointerException when create is called with null uid")
-  void shouldThrowNullPointerExceptionWhenCreateWithNullUid() {
-    // noinspection DataFlowIssue
-    assertThatThrownBy(() -> service.create(null)).isInstanceOf(NullPointerException.class);
-  }
-
-  @Test
-  @DisplayName("Should throw NullPointerException when get is called with null uid")
-  void shouldThrowNullPointerExceptionWhenGetWithNullUid() {
-    // noinspection DataFlowIssue
-    assertThatThrownBy(() -> service.get(null)).isInstanceOf(NullPointerException.class);
-  }
 }

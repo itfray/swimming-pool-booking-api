@@ -8,13 +8,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /** Adds a trace header containing the current trace id to the response. */
 @Component
+@NullMarked
 @RequiredArgsConstructor
 public class AddTraceIdFilter extends OncePerRequestFilter {
 
@@ -24,9 +26,7 @@ public class AddTraceIdFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(
-      @NonNull HttpServletRequest request,
-      @NonNull HttpServletResponse response,
-      @NonNull FilterChain filterChain)
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
     String traceId = getTraceId();
     if (Objects.nonNull(traceId)) {
@@ -36,7 +36,7 @@ public class AddTraceIdFilter extends OncePerRequestFilter {
     filterChain.doFilter(request, response);
   }
 
-  private String getTraceId() {
+  private @Nullable String getTraceId() {
     TraceContext context = this.tracer.currentTraceContext().context();
     return Objects.nonNull(context) ? context.traceId() : null;
   }

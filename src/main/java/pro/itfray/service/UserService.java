@@ -2,10 +2,11 @@ package pro.itfray.service;
 
 import java.util.Optional;
 import java.util.UUID;
-import lombok.NonNull;
+import org.jspecify.annotations.NullMarked;
 import pro.itfray.domain.User;
 
 /** Service that provides operations related to users. */
+@NullMarked
 public interface UserService {
 
   /**
@@ -14,7 +15,7 @@ public interface UserService {
    * @param uid the user id
    * @return the created or existing user
    */
-  User create(@NonNull UUID uid);
+  User create(UUID uid);
 
   /**
    * Get a user by id.
@@ -22,5 +23,5 @@ public interface UserService {
    * @param uid the user id
    * @return optional user
    */
-  Optional<User> get(@NonNull UUID uid);
+  Optional<User> get(UUID uid);
 }
