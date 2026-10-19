@@ -68,11 +68,11 @@ public class SecurityConfig {
     return jwt -> {
       Collection<GrantedAuthority> grantedAuthorities = delegate.convert(jwt);
 
-      if (Objects.isNull(jwt.getClaim(REALM_CLAIM))) {
+      Map<String, Object> realmAccess = jwt.getClaim(REALM_CLAIM);
+      if (Objects.isNull(realmAccess)) {
         return grantedAuthorities;
       }
 
-      Map<String, Object> realmAccess = jwt.getClaim(REALM_CLAIM);
       if (Objects.isNull(realmAccess.get(ROLES_CLAIM))) {
         return grantedAuthorities;
       }
