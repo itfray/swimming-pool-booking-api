@@ -32,16 +32,13 @@ public interface UserProfileMapper {
     Objects.requireNonNull(user.getTheme(), "User theme must not be null");
 
     final var dto = new UserProfileDto();
-    if (authentication instanceof JwtAuthenticationToken authToken
-        && Objects.nonNull(authToken.getPrincipal())) {
+    if (authentication instanceof JwtAuthenticationToken authToken) {
       final var principal = (Jwt) authToken.getPrincipal();
       final Map<String, Object> claims = principal.getClaims();
-      if (Objects.nonNull(claims)) {
-        dto.setUsername((String) claims.get(USERNAME_CLAIM));
-        dto.setEmail((String) claims.get(EMAIL_CLAIM));
-        dto.setFirstName((String) claims.get(GIVEN_NAME_CLAIM));
-        dto.setLastName((String) claims.get(FAMILY_NAME_CLAIM));
-      }
+      dto.setUsername((String) claims.get(USERNAME_CLAIM));
+      dto.setEmail((String) claims.get(EMAIL_CLAIM));
+      dto.setFirstName((String) claims.get(GIVEN_NAME_CLAIM));
+      dto.setLastName((String) claims.get(FAMILY_NAME_CLAIM));
     }
 
     dto.setUid(user.getUid());
