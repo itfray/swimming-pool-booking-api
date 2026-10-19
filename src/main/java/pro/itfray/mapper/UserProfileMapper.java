@@ -1,8 +1,8 @@
 package pro.itfray.mapper;
 
 import java.util.Map;
-import java.util.Objects;
-import lombok.NonNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.mapstruct.Mapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -11,6 +11,7 @@ import pro.itfray.domain.User;
 import pro.itfray.dto.UserProfileDto;
 
 /** Mapper that converts domain User to UserProfileDto. */
+@NullMarked
 @Mapper(componentModel = "spring")
 public interface UserProfileMapper {
 
@@ -28,9 +29,7 @@ public interface UserProfileMapper {
    * @return populated UserProfileDto
    */
   default UserProfileDto toDto(
-      @NonNull User user, Authentication authentication, boolean hasOrganization) {
-    Objects.requireNonNull(user.getTheme(), "User theme must not be null");
-
+      User user, @Nullable Authentication authentication, boolean hasOrganization) {
     final var dto = new UserProfileDto();
     if (authentication instanceof JwtAuthenticationToken authToken) {
       final var principal = (Jwt) authToken.getPrincipal();

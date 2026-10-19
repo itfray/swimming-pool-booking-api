@@ -7,6 +7,7 @@ import io.micrometer.core.instrument.binder.jvm.convention.otel.OpenTelemetryJvm
 import io.micrometer.core.instrument.binder.jvm.convention.otel.OpenTelemetryJvmThreadMeterConventions;
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import org.springframework.http.server.observation.OpenTelemetryServerRequestObs
  * Registers the {@link InstallOpenTelemetryAppender} and Micrometer conventions to get metrics
  * which adhere to the OpenTelemetry conventions.
  */
+@NullMarked
 @Configuration(proxyBeanMethods = false)
 public class OpenTelemetryConfiguration {
 

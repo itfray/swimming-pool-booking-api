@@ -1,7 +1,6 @@
 package pro.itfray.filter;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -88,44 +87,5 @@ class AddTraceIdFilterTest {
 
     assertThat(response.getHeader(X_TRACE_ID_HEADER)).isNull();
     verify(filterChain).doFilter(request, response);
-  }
-
-  @Test
-  @DisplayName("Should throw when request is null")
-  void shouldThrowWhenRequestIsNull() {
-    Tracer tracer = mock(Tracer.class);
-    AddTraceIdFilter filter = new AddTraceIdFilter(tracer);
-    HttpServletResponse response = new MockHttpServletResponse();
-    FilterChain filterChain = mock(FilterChain.class);
-
-    // noinspection DataFlowIssue
-    assertThatThrownBy(() -> filter.doFilterInternal(null, response, filterChain))
-        .isInstanceOf(NullPointerException.class);
-  }
-
-  @Test
-  @DisplayName("Should throw when response is null")
-  void shouldThrowWhenResponseIsNull() {
-    Tracer tracer = mock(Tracer.class);
-    AddTraceIdFilter filter = new AddTraceIdFilter(tracer);
-    HttpServletRequest request = new MockHttpServletRequest();
-    FilterChain filterChain = mock(FilterChain.class);
-
-    // noinspection DataFlowIssue
-    assertThatThrownBy(() -> filter.doFilterInternal(request, null, filterChain))
-        .isInstanceOf(NullPointerException.class);
-  }
-
-  @Test
-  @DisplayName("Should throw when filter chain is null")
-  void shouldThrowWhenFilterChainIsNull() {
-    Tracer tracer = mock(Tracer.class);
-    AddTraceIdFilter filter = new AddTraceIdFilter(tracer);
-    HttpServletRequest request = new MockHttpServletRequest();
-    HttpServletResponse response = new MockHttpServletResponse();
-
-    // noinspection DataFlowIssue
-    assertThatThrownBy(() -> filter.doFilterInternal(request, response, null))
-        .isInstanceOf(NullPointerException.class);
   }
 }
