@@ -20,7 +20,19 @@ spring:
         jwt:
           jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:18081/realms/pool-booking/protocol/openid-connect/certs}
 
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
 management:
+  endpoints:
+    access:
+      default: unrestricted
+    web:
+      exposure:
+        include: '*'
   tracing:
     sampling:
       probability: 1.0

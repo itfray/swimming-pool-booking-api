@@ -42,14 +42,11 @@ class UserControllerIntegrationTest extends AbstractWebMvcIntegrationTest {
   static final boolean HAS_ORGANIZATION = true;
   static final String THEME = Theme.BLACK.name();
 
-  @Autowired
-  MockMvc mockMvc;
+  @Autowired MockMvc mockMvc;
 
-  @MockitoBean
-  UserService service;
+  @MockitoBean UserService service;
 
-  @MockitoBean
-  UserProfileMapper profileMapper;
+  @MockitoBean UserProfileMapper profileMapper;
 
   @Nested
   @DisplayName("Create a user")
@@ -58,8 +55,7 @@ class UserControllerIntegrationTest extends AbstractWebMvcIntegrationTest {
     @Test
     @DisplayName("Should return unauthorized without an authorization token")
     void shouldReturnUnauthorizedWithoutAuthToken() throws Exception {
-      mockMvc.perform(post(URI))
-          .andExpect(status().isUnauthorized());
+      mockMvc.perform(post(URI)).andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -69,17 +65,18 @@ class UserControllerIntegrationTest extends AbstractWebMvcIntegrationTest {
       final UUID uid = UUID.fromString(USER_ID);
       when(service.create(uid)).thenReturn(user);
       when(profileMapper.toDto(eq(user), any(Authentication.class), anyBoolean()))
-          .thenReturn(UserProfileDto.builder()
-              .uid(uid)
-              .username(USERNAME)
-              .email(EMAIL)
-              .firstName(FIRST_NAME)
-              .lastName(LAST_NAME)
-              .theme(THEME)
-              .hasOrganization(HAS_ORGANIZATION)
-              .build());
+          .thenReturn(
+              new UserProfileDto()
+                  .uid(uid)
+                  .username(USERNAME)
+                  .email(EMAIL)
+                  .firstName(FIRST_NAME)
+                  .lastName(LAST_NAME)
+                  .theme(THEME)
+                  .hasOrganization(HAS_ORGANIZATION));
 
-      mockMvc.perform(post(URI).with(jwt()).with(user(USER_ID)))
+      mockMvc
+          .perform(post(URI).with(jwt()).with(user(USER_ID)))
           .andExpect(status().isCreated())
           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
           .andExpect(jsonPath("$.uid").value(USER_ID))
@@ -99,26 +96,24 @@ class UserControllerIntegrationTest extends AbstractWebMvcIntegrationTest {
     @Test
     @DisplayName("Should return unauthorized without an authorization token")
     void shouldReturnUnauthorizedWithoutAuthToken() throws Exception {
-      mockMvc.perform(get(URI + "/" + USER_ID))
-          .andExpect(status().isUnauthorized());
+      mockMvc.perform(get(URI + "/" + USER_ID)).andExpect(status().isUnauthorized());
     }
 
     @Test
     @DisplayName("Should return forbidden with an authorization token of an another user")
     void shouldReturnForbiddenWithAuthTokenOfAnotherUser() throws Exception {
-      mockMvc.perform(get(URI + "/" + USER_ID)
-              .with(jwt()).with(user(ANOTHER_USER_ID)))
+      mockMvc
+          .perform(get(URI + "/" + USER_ID).with(jwt()).with(user(ANOTHER_USER_ID)))
           .andExpect(status().isForbidden());
     }
 
     @Test
     @DisplayName("Should return not found when user does not exist")
     void shouldReturnNotFoundWhenUserDoesNotExist() throws Exception {
-      when(service.get(UUID.fromString(USER_ID)))
-          .thenReturn(Optional.empty());
+      when(service.get(UUID.fromString(USER_ID))).thenReturn(Optional.empty());
 
-      mockMvc.perform(get(URI + "/" + USER_ID)
-              .with(jwt()).with(user(USER_ID)))
+      mockMvc
+          .perform(get(URI + "/" + USER_ID).with(jwt()).with(user(USER_ID)))
           .andExpect(status().isNotFound());
     }
 
@@ -129,18 +124,18 @@ class UserControllerIntegrationTest extends AbstractWebMvcIntegrationTest {
       final UUID uid = UUID.fromString(USER_ID);
       when(service.get(uid)).thenReturn(Optional.of(user));
       when(profileMapper.toDto(eq(user), any(Authentication.class), anyBoolean()))
-          .thenReturn(UserProfileDto.builder()
-              .uid(uid)
-              .username(USERNAME)
-              .email(EMAIL)
-              .firstName(FIRST_NAME)
-              .lastName(LAST_NAME)
-              .theme(THEME)
-              .hasOrganization(HAS_ORGANIZATION)
-              .build());
+          .thenReturn(
+              new UserProfileDto()
+                  .uid(uid)
+                  .username(USERNAME)
+                  .email(EMAIL)
+                  .firstName(FIRST_NAME)
+                  .lastName(LAST_NAME)
+                  .theme(THEME)
+                  .hasOrganization(HAS_ORGANIZATION));
 
-      mockMvc.perform(get(URI + "/" + USER_ID)
-              .with(jwt()).with(user(USER_ID)))
+      mockMvc
+          .perform(get(URI + "/" + USER_ID).with(jwt()).with(user(USER_ID)))
           .andExpect(status().isOk())
           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
           .andExpect(jsonPath("$.uid").value(USER_ID))
@@ -152,5 +147,4 @@ class UserControllerIntegrationTest extends AbstractWebMvcIntegrationTest {
           .andExpect(jsonPath("$.theme").value(THEME));
     }
   }
-
 }

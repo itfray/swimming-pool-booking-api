@@ -25,6 +25,10 @@
     <!-- OpenTelemetry -->
     <opentelemetry-logback-appender.version>2.28.0-alpha</opentelemetry-logback-appender.version>
 
+    <!-- OpenAPI -->
+    <openapi-generator.version>7.15.0</openapi-generator.version>
+    <springdoc-openapi.version>3.1.1</springdoc-openapi.version>
+
     <!-- Lombok -->
     <lombok.version>1.18.42</lombok.version>
     <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
@@ -66,9 +70,22 @@
     <sonar.coverage.exclusions>
       **/PoolBookingApplication.java,
       **/config/SecurityConfig.java,
-      **/config/OpenTelemetryConfiguration*.java
+      **/config/OpenTelemetryConfig*.java,
+      **/config/OpenApiConfig*.java
     </sonar.coverage.exclusions>
   </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-bom</artifactId>
+        <version>${springdoc-openapi.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <!-- Spring Boot -->
@@ -122,6 +139,12 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+    </dependency>
+
+    <!-- SpringDoc OpenAPI -->
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
     </dependency>
 
     <!-- OpenTelemetry -->
@@ -332,6 +355,7 @@
         <configuration>
           <source>${maven.compiler.source}</source>
           <target>${maven.compiler.target}</target>
+          <parameters>true</parameters>
           <annotationProcessorPaths>
             <path>
               <groupId>org.mapstruct</groupId>
@@ -386,7 +410,8 @@
           <excludes>
             <exclude>pro/itfray/PoolBookingApplication.*</exclude>
             <exclude>pro/itfray/**/config/SecurityConfig.*</exclude>
-            <exclude>pro/itfray/**/config/OpenTelemetryConfiguration*.*</exclude>
+            <exclude>pro/itfray/**/config/OpenTelemetryConfig*.*</exclude>
+            <exclude>pro/itfray/**/config/OpenApiConfig*.*</exclude>
           </excludes>
           <rules>
             <rule>
@@ -449,6 +474,51 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.openapitools</groupId>
+        <artifactId>openapi-generator-maven-plugin</artifactId>
+        <version>${openapi-generator.version}</version>
+        <configuration>
+          <generatorName>spring</generatorName>
+          <output>${project.build.directory}/generated-sources/openapi</output>
+          <apiPackage>pro.itfray.api</apiPackage>
+          <modelPackage>pro.itfray.dto</modelPackage>
+          <generateApis>true</generateApis>
+          <generateModels>true</generateModels>
+          <generateSupportingFiles>false</generateSupportingFiles>
+          <configOptions>
+            <useSpringBoot3>true</useSpringBoot3>
+            <dateLibrary>java8</dateLibrary>
+            <interfaceOnly>true</interfaceOnly>
+            <useTags>true</useTags>
+            <useEnumCaseInsensitive>true</useEnumCaseInsensitive>
+            <skipDefaultInterface>true</skipDefaultInterface>
+            <openApiNullable>false</openApiNullable>
+            <useJakartaEe>true</useJakartaEe>
+            <booleanGetterPrefix>is</booleanGetterPrefix>
+            <additionalModelTypeAnnotations>@lombok.Generated</additionalModelTypeAnnotations>
+          </configOptions>
+          <typeMappings>
+            <typeMapping>DateTime=java.time.Instant</typeMapping>
+          </typeMappings>
+          <importMappings>
+            <importMapping>Instant=java.time.Instant</importMapping>
+          </importMappings>
+        </configuration>
+        <executions>
+          <execution>
+            <id>user-api</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>${project.basedir}/src/main/resources/openapi/user.yaml</inputSpec>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

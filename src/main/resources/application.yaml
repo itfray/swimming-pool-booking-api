@@ -38,6 +38,12 @@ spring:
         jwt:
           jwk-set-uri: ${KEYCLOAK_JWK_SET_URI}
 
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
 management:
   server.port: ${MANAGEMENT_SERVER_PORT:8081}
   observations:
@@ -45,6 +51,9 @@ management:
   endpoints:
     access:
       default: read_only
+    web:
+      exposure:
+        include: health
   endpoint:
     health:
       show-details: always

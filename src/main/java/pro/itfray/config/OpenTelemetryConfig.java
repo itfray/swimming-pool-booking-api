@@ -19,7 +19,7 @@ import org.springframework.http.server.observation.OpenTelemetryServerRequestObs
  */
 @NullMarked
 @Configuration(proxyBeanMethods = false)
-public class OpenTelemetryConfiguration {
+public class OpenTelemetryConfig {
 
   /**
    * An {@link InitializingBean} (it gets called by Spring when the app starts) to register the
