@@ -25,8 +25,19 @@ import org.springframework.security.web.SecurityFilterChain;
 @NullMarked
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(proxyTargetClass = true)
 public class SecurityConfig {
+
+  private static final String[] ACTUATOR_REQUEST_MATCHERS = {"/actuator/**"};
+
+  private static final String[] SWAGGER_REQUEST_MATCHERS = {
+    "/v3/api-docs/**",
+    "/swagger-ui/**",
+    "/swagger-resources/**",
+    "/documentation/**",
+    "/swagger-ui.html",
+    "/webjars/**"
+  };
 
   private static final String REALM_CLAIM = "realm_access";
   private static final String ROLES_CLAIM = "roles";
@@ -39,9 +50,9 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) {
     http.authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/actuator/health")
+                auth.requestMatchers(ACTUATOR_REQUEST_MATCHERS)
                     .permitAll()
-                    .requestMatchers("/actuator/health/*")
+                    .requestMatchers(SWAGGER_REQUEST_MATCHERS)
                     .permitAll()
                     .anyRequest()
                     .authenticated())

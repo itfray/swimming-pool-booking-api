@@ -3,9 +3,10 @@ package pro.itfray.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-import java.security.Principal;
 import java.util.Optional;
 import java.util.UUID;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import pro.itfray.domain.User;
 import pro.itfray.dto.UserProfileDto;
 import pro.itfray.mapper.UserProfileMapper;
@@ -29,11 +31,19 @@ class UserControllerTest {
 
   @Mock UserProfileMapper profileMapper;
 
-  @Mock Principal principal;
-
   @Mock Authentication authentication;
 
   @InjectMocks UserController controller;
+
+  @BeforeEach
+  void setUp() {
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+  }
+
+  @AfterEach
+  void tearDown() {
+    SecurityContextHolder.clearContext();
+  }
 
   @Test
   @DisplayName("Should create a new user and return HTTP 201 with profile")
@@ -41,12 +51,12 @@ class UserControllerTest {
     final var user = new User();
     final UUID uid = UUID.fromString(USER_ID);
 
-    when(principal.getName()).thenReturn(USER_ID);
+    when(authentication.getName()).thenReturn(USER_ID);
     when(service.create(uid)).thenReturn(user);
-    final UserProfileDto dto = UserProfileDto.builder().uid(uid).build();
+    final UserProfileDto dto = new UserProfileDto().uid(uid);
     when(profileMapper.toDto(user, authentication, false)).thenReturn(dto);
 
-    ResponseEntity<UserProfileDto> response = controller.createUser(principal, authentication);
+    ResponseEntity<UserProfileDto> response = controller.createUser();
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     assertThat(response.getBody()).isEqualTo(dto);
@@ -59,10 +69,10 @@ class UserControllerTest {
     final UUID uid = UUID.fromString(USER_ID);
 
     when(service.get(uid)).thenReturn(Optional.of(user));
-    final UserProfileDto dto = UserProfileDto.builder().uid(uid).build();
+    final UserProfileDto dto = new UserProfileDto().uid(uid);
     when(profileMapper.toDto(user, authentication, false)).thenReturn(dto);
 
-    ResponseEntity<UserProfileDto> response = controller.getUser(USER_ID, authentication);
+    ResponseEntity<UserProfileDto> response = controller.getUser(uid);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getBody()).isEqualTo(dto);
@@ -75,7 +85,7 @@ class UserControllerTest {
 
     when(service.get(uid)).thenReturn(Optional.empty());
 
-    ResponseEntity<UserProfileDto> response = controller.getUser(USER_ID, authentication);
+    ResponseEntity<UserProfileDto> response = controller.getUser(uid);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     assertThat(response.getBody()).isNull();

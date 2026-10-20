@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   This configuration outputs logs to the console and also sends them to OpenTelemetry.
-  See pro.itfray.config.OpenTelemetryConfiguration.InstallOpenTelemetryAppender for the code parts.
+  See pro.itfray.config.OpenTelemetryConfig.InstallOpenTelemetryAppender for the code parts.
 -->
 <configuration>
 
