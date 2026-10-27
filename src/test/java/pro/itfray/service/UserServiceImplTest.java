@@ -32,7 +32,7 @@ class UserServiceImplTest {
   @Test
   @DisplayName("Should create a new user when it does not exist in the repository")
   void shouldCreateUserWhenMissing() {
-    when(repository.findById(ID1)).thenReturn(Optional.empty());
+    when(repository.findByUid(ID1)).thenReturn(Optional.empty());
     when(repository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
     User user = service.create(ID1);
@@ -44,8 +44,8 @@ class UserServiceImplTest {
   @Test
   @DisplayName("Should return an existing user when it exists in the repository")
   void shouldReturnExistingUser() {
-    User existing = new User(ID2, Theme.BLACK);
-    when(repository.findById(ID2)).thenReturn(Optional.of(existing));
+    User existing = User.builder().uid(ID2).theme(Theme.BLACK).build();
+    when(repository.findByUid(ID2)).thenReturn(Optional.of(existing));
 
     User user = service.create(ID2);
 
@@ -55,8 +55,8 @@ class UserServiceImplTest {
   @Test
   @DisplayName("Should handle DataIntegrityViolationException by returning user from repository")
   void shouldHandleDataIntegrityViolationException() {
-    User createdUser = new User(ID3, Theme.WHITE);
-    when(repository.findById(ID3))
+    User createdUser = User.builder().uid(ID3).theme(Theme.WHITE).build();
+    when(repository.findByUid(ID3))
         .thenReturn(Optional.empty())
         .thenReturn(Optional.of(createdUser));
     when(repository.save(any()))
@@ -71,7 +71,7 @@ class UserServiceImplTest {
   @DisplayName(
       "Should throw exception when DataIntegrityViolationException occurs and user not found")
   void shouldThrowExceptionWhenUserNotFoundAfterIntegrityViolation() {
-    when(repository.findById(ID1)).thenReturn(Optional.empty());
+    when(repository.findByUid(ID1)).thenReturn(Optional.empty());
     when(repository.save(any()))
         .thenThrow(new DataIntegrityViolationException("Duplicate key value"));
 
@@ -82,8 +82,8 @@ class UserServiceImplTest {
   @Test
   @DisplayName("Should find an existing user by id")
   void shouldFindExistingUserById() {
-    User existing = new User(ID2, Theme.BLACK);
-    when(repository.findById(ID2)).thenReturn(Optional.of(existing));
+    User existing = User.builder().uid(ID2).theme(Theme.BLACK).build();
+    when(repository.findByUid(ID2)).thenReturn(Optional.of(existing));
 
     Optional<User> user = service.get(ID2);
 
@@ -93,7 +93,7 @@ class UserServiceImplTest {
   @Test
   @DisplayName("Should return empty optional when user not found")
   void shouldReturnEmptyWhenUserNotFound() {
-    when(repository.findById(ID1)).thenReturn(Optional.empty());
+    when(repository.findByUid(ID1)).thenReturn(Optional.empty());
 
     Optional<User> user = service.get(ID1);
 

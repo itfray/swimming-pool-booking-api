@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NullMarked;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import pro.itfray.domain.Theme;
 import pro.itfray.domain.User;
 import pro.itfray.repository.UserRepository;
 
@@ -31,15 +30,15 @@ public class UserServiceImpl implements UserService {
   @Observed(name = "user.create")
   public User create(@ObservationKeyValue("uid") UUID uid) {
     return repository
-        .findById(uid)
+        .findByUid(uid)
         .orElseGet(
             () -> {
               try {
-                User createdUser = repository.save(new User(uid, Theme.WHITE));
+                User createdUser = repository.save(User.builder().uid(uid).build());
                 log.debug("A user '{}' was created", uid);
                 return createdUser;
               } catch (DataIntegrityViolationException ex) {
-                return repository.findById(uid).orElseThrow(() -> ex);
+                return repository.findByUid(uid).orElseThrow(() -> ex);
               }
             });
   }
@@ -52,6 +51,6 @@ public class UserServiceImpl implements UserService {
    */
   @Observed(name = "user.get")
   public Optional<User> get(@ObservationKeyValue("uid") UUID uid) {
-    return repository.findById(uid);
+    return repository.findByUid(uid);
   }
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <changeSet id="v1_4_add_organization_membership" author="Ilya Efarov" dbms="postgresql">
+    <createTable tableName="user_organization_membership">
+      <column name="id" type="bigint" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="user_id" type="bigint">
+        <constraints nullable="false"/>
+      </column>
+      <column name="organization_id" type="bigint">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <addForeignKeyConstraint
+      baseTableName="user_organization_membership"
+      baseColumnNames="user_id"
+      constraintName="fk_user_organization_membership_user"
+      referencedTableName="app_user"
+      referencedColumnNames="id"
+      onDelete="CASCADE"/>
+
+    <addForeignKeyConstraint
+      baseTableName="user_organization_membership"
+      baseColumnNames="organization_id"
+      constraintName="fk_user_organization_membership_organization"
+      referencedTableName="organization"
+      referencedColumnNames="id"
+      onDelete="CASCADE"/>
+
+    <addUniqueConstraint
+      tableName="user_organization_membership"
+      columnNames="user_id, organization_id"
+      constraintName="uk_user_organization_membership_unique"/>
+  </changeSet>
+
+</databaseChangeLog>

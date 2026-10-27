@@ -66,11 +66,12 @@ class UserProfileMapperTest {
   }
 
   @Test
-  @DisplayName("Should handle user with null UID by returning null uid in DTO")
-  void shouldAllowNullUid() {
-    User user = createUser(null, Theme.WHITE);
+  @DisplayName("Should expose the user's UUID in the DTO")
+  void shouldExposeUid() {
+    UUID uid = UUID.randomUUID();
+    User user = createUser(uid, Theme.WHITE);
     UserProfileDto dto = mapper.toDto(user, null, false);
-    assertThat(dto.getUid()).isNull();
+    assertThat(dto.getUid()).isEqualTo(uid);
     assertThat(dto.getTheme()).isEqualTo("WHITE");
   }
 
@@ -95,7 +96,7 @@ class UserProfileMapperTest {
   }
 
   private static User createUser(UUID uid, Theme theme) {
-    return new User(uid, theme);
+    return User.builder().uid(uid).theme(theme).build();
   }
 
   private static JwtAuthenticationToken jwtAuthWithClaims(Map<String, Object> claims) {

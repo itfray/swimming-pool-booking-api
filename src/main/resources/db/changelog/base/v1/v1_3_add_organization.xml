@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <changeSet id="v1_3_add_organization" author="Ilya Efarov" dbms="postgresql">
+    <createTable tableName="organization">
+      <column name="id" type="bigint" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="name" type="varchar(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="contact_email" type="varchar(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="phone_number" type="varchar(64)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="service_street_address" type="varchar(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="service_city" type="varchar(128)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="service_postal_code" type="varchar(32)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="service_country" type="varchar(128)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+</databaseChangeLog>
