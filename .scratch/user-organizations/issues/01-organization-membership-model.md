@@ -6,9 +6,8 @@
 
 **Status:** ready-for-agent
 
-- [ ] Add an Organization entity with the representative-facing profile fields: name, contact information, and service address.
-- [ ] Model the user-organization membership as a dedicated join relationship so users can belong to multiple organizations and organizations can have multiple users.
-- [ ] Add the persistence and repository layer needed to load organizations and memberships in the authorization flow.
-- [ ] Create the migration required to introduce the new table and foreign keys without disturbing the existing user model.
-- [ ] Verify the persisted model matches the API access model: representative access is granted via membership, and admin access remains role-based.
-
+- [x] Add an Organization entity with the representative-facing profile fields: name, contact information, and service address.
+- [x] Model the user-organization membership as a dedicated join relationship so users can belong to multiple organizations and organizations can have multiple users.
+- [x] Add the persistence and repository layer needed to load organizations and memberships in the authorization flow.
+- [x] Create the migration required to introduce the new table and foreign keys without disturbing the existing user model.
+- [x] Verify the persisted model matches the API access model: representative access is granted via membership, and admin access remains role-based.

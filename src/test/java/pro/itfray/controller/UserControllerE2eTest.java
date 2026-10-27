@@ -63,7 +63,7 @@ class UserControllerE2eTest extends AbstractE2eTest {
   @Test
   @DisplayName("Should return a user profile of an existing user")
   void shouldGetExistingUser() {
-    repository.save(new User(UUID.fromString(USER_ID), Theme.BLACK));
+    repository.save(User.builder().uid(UUID.fromString(USER_ID)).theme(Theme.BLACK).build());
 
     given()
         .header("Authorization", "Bearer " + token)

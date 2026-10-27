@@ -61,7 +61,7 @@ class UserControllerIntegrationTest extends AbstractWebMvcIntegrationTest {
     @Test
     @DisplayName("Should create a user and return a user profile")
     void shouldReturnOkAndUserProfile() throws Exception {
-      final var user = new User();
+      final var user = User.builder().build();
       final UUID uid = UUID.fromString(USER_ID);
       when(service.create(uid)).thenReturn(user);
       when(profileMapper.toDto(eq(user), any(Authentication.class), anyBoolean()))
@@ -80,6 +80,7 @@ class UserControllerIntegrationTest extends AbstractWebMvcIntegrationTest {
           .andExpect(status().isCreated())
           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
           .andExpect(jsonPath("$.uid").value(USER_ID))
+          .andExpect(jsonPath("$.id").doesNotExist())
           .andExpect(jsonPath("$.username").value(USERNAME))
           .andExpect(jsonPath("$.email").value(EMAIL))
           .andExpect(jsonPath("$.firstName").value(FIRST_NAME))
@@ -120,7 +121,7 @@ class UserControllerIntegrationTest extends AbstractWebMvcIntegrationTest {
     @Test
     @DisplayName("Should return ok and user profile")
     void shouldReturnOkAndUserProfile() throws Exception {
-      final var user = new User();
+      final var user = User.builder().build();
       final UUID uid = UUID.fromString(USER_ID);
       when(service.get(uid)).thenReturn(Optional.of(user));
       when(profileMapper.toDto(eq(user), any(Authentication.class), anyBoolean()))
@@ -139,6 +140,7 @@ class UserControllerIntegrationTest extends AbstractWebMvcIntegrationTest {
           .andExpect(status().isOk())
           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
           .andExpect(jsonPath("$.uid").value(USER_ID))
+          .andExpect(jsonPath("$.id").doesNotExist())
           .andExpect(jsonPath("$.username").value(USERNAME))
           .andExpect(jsonPath("$.email").value(EMAIL))
           .andExpect(jsonPath("$.firstName").value(FIRST_NAME))

@@ -48,7 +48,7 @@ class UserControllerTest {
   @Test
   @DisplayName("Should create a new user and return HTTP 201 with profile")
   void shouldCreateNewUserAndReturnCreatedProfile() {
-    final var user = new User();
+    final var user = User.builder().build();
     final UUID uid = UUID.fromString(USER_ID);
 
     when(authentication.getName()).thenReturn(USER_ID);
@@ -65,7 +65,7 @@ class UserControllerTest {
   @Test
   @DisplayName("Should return HTTP 200 and user profile when user exists")
   void shouldReturnOkAndUserProfileWhenUserExists() {
-    final var user = new User();
+    final var user = User.builder().build();
     final UUID uid = UUID.fromString(USER_ID);
 
     when(service.get(uid)).thenReturn(Optional.of(user));
