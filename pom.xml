@@ -64,7 +64,7 @@
 
     <!-- Checkstyle -->
     <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
-    <checkstyle.version>14.3.0</checkstyle.version>
+    <checkstyle.version>14.4.0</checkstyle.version>
 
     <!-- Sonar -->
     <sonar.coverage.exclusions>
